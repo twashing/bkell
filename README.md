@@ -1,10 +1,7 @@
-# bkell
+## Bkell
 
-A Clojure library designed to ... well, that part is up to you.
+ _**Bkell**_ provides a Shell and API for maintaining balanced records for business transactions.
 
-## Usage
-
-FIXME
 
 ## License
 
