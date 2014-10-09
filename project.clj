@@ -7,4 +7,5 @@
   :dependencies [[org.clojure/clojure "1.7.0-alpha1"]
                  [org.clojure/test.check "0.5.9"]]
 
-  :profiles {:dev {:source-paths ["dev"]}})
+  :profiles {:dev {:source-paths ["dev"]
+                   :dependencies [[alembic "0.2.1"]]}})
