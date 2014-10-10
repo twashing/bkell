@@ -6,11 +6,13 @@ For a more detailed description of double-entry bookkeeping concepts, refer to [
 
 ## Architecture 
 
-The user works in a shell environment, manipulating the core data structures of the system. Bkell uses Clojure for its runtime, and Datomic as its datastore. The system comprises, mostly of simple functions, and a data abstraction layer to push and pull data, in and out of the database.
+The user works in a shell environment, manipulating the core data structures of the system. Bkell uses [Clojure](http://clojure.org/) for its runtime, and [Datomic](http://www.datomic.com/) as its datastore. The system is comprised of mostly of simple functions, and a data abstraction layer to push and pull data, into and out of the database. 
 
-### Data Structure
+One of the benefits of Datomic, is that the storage engine can live in your runtime, on your local machine, or on a remote server. As such, bkell can be embedded in a larger system's runtime, or as a RESTful service. The client system simply calls Bkell's API functions to manipulate the core data structures. Additionally, you can attach any user interface on top of it. 
 
-These are the core entities in the system. The main business transaction are adding and manipulating entries, against a given set of accounts. All those business operations happen within a Journal, of a Book, for a given Group, which has Users attached. 
+#### Data Structure
+
+These are the core entities in the system. The main business transactions are adding and manipulating entries, against a given set of accounts. All those business operations happen within a Journal, of a Book, for a given Group, which has Users attached. 
 
   - **Group**
     - can only have 1 owner 
