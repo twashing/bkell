@@ -46,6 +46,7 @@ These are the core entities in the system. The main business transactions are ad
 ## Todo List
 
 - setup test infrastructure (using test.check)
+- setup component architecture
 - establish core data structure (datomic schema)
 - datomic wrapper (using adi), with nominal CRUD operations; the abouve data structure constraints must be maintained when manipulating entites in the system.
   - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
@@ -55,7 +56,7 @@ These are the core entities in the system. The main business transactions are ad
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Interrupt Software Inc.
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

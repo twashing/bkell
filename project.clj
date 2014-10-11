@@ -5,7 +5,13 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha1"]
-                 [org.clojure/test.check "0.5.9"]]
+                 [com.taoensso/timbre "3.3.1"]
+                 [adi "0.1.6"]
+                 [com.datomic/datomic-free "0.9.4899"]
+                 [im.chit/hara.component "2.1.4"]
+                 [environ "1.0.0"]
+                 [missing-utils "0.1.5"]]
 
   :profiles {:dev {:source-paths ["dev"]
-                   :dependencies [[alembic "0.2.1"]]}})
+                   :dependencies [[org.clojure/test.check "0.5.9"]
+                                  [alembic "0.2.1"]]}})

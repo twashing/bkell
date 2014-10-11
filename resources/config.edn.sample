@@ -1,0 +1,7 @@
+{:test {:url-datomic "datomic:mem://bkell-dev"
+        :ephemeral true  ;; dangerous - deletes DB on each boot
+        }
+ :dev {:url-datomic "datomic:free://localhost:4334//bkell"
+       :ephemeral false}
+ :prod {:url-datomic "datomic:free://localhost:4334//bkell"
+        :ephemeral false}}
