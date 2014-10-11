@@ -6,9 +6,9 @@ For a more detailed description of double-entry bookkeeping concepts, refer to [
 
 ## Architecture 
 
-The user works in a shell environment, manipulating the core data structures of the system. Bkell uses [Clojure](http://clojure.org/) for its runtime, and [Datomic](http://www.datomic.com/) as its datastore. The system is comprised of mostly of simple functions, and a data abstraction layer to push and pull data, into and out of the database. 
+The user works in a shell environment, manipulating the core data structures of the system. Bkell uses [Clojure](http://clojure.org/) for its runtime, and [Datomic](http://www.datomic.com/) as its datastore. The system is comprised, mostly of simple functions, and a data abstraction layer to push and pull data, into and out of the database. 
 
-One of the benefits of Datomic, is that the storage engine can live in your runtime, on your local machine, or on a remote server. As such, bkell can be embedded in a larger system's runtime, or as a RESTful service. The client system simply calls Bkell's API functions to manipulate the core data structures. Additionally, you can attach any user interface on top of it. 
+One of the benefits of Datomic, is that the storage engine can live in your runtime, on your local machine, or on a remote server. As such, Bkell can be embedded in a larger system's runtime, or as a RESTful service. The client system simply calls Bkell's API functions to manipulate the core data structures. Additionally, you can attach any user interface on top of it. 
 
 #### Data Structure
 
@@ -48,6 +48,9 @@ These are the core entities in the system. The main business transactions are ad
 - setup test infrastructure (using test.check)
 - establish core data structure (datomic schema)
 - datomic wrapper (using adi), with nominal CRUD operations; the abouve data structure constraints must be maintained when manipulating entites in the system.
+  - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
+- import / export data 
+- runnable scripts ; include code examples for adding account(s) and entries 
 
 
 ## License
