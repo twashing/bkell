@@ -1,0 +1,152 @@
+{:currency {:id [{:unique :value
+                  ;;:required true
+                  }]
+
+            :name [{:unique :value
+                    ;;:required true
+                    }]}
+
+ :country {:id [{:unique :value
+                 ;;:required true
+                 }]
+
+           :name [{:unique :value
+                   ;;:required true
+                   }]}
+
+ :account {:name [{:doc "Display name for this Account"}]
+
+           :type [{:type :enum
+                   :default :asset
+                   :enum {:ns :account.type
+                          :values #{:asset :liability :revenue :expense}}}]
+
+           :counterWeight [{:type :enum
+                            :default :debit
+                            :enum {:ns :account.counterWeight
+                                   :values #{:debit :credit}}}]}
+
+ ;; debits & credits
+ :content {:type [{:type :enum
+                   :default :debit
+                   :enum {:ns :content.type
+                          :values #{:debit :credit}}}]
+
+           :amount [{:type :float}]
+
+           :account [{:type :ref
+                      :ref {:ns :account}}]
+
+           :currency [{:type :ref
+                       :ref {:ns :currency}}]}
+
+ :entry [{:currency [{:type :ref
+                      :ref {:ns :currency}}]
+
+          :assets [{:type :ref
+                    :ref :asset
+                    :cardinality :many
+                    :doc "Set of image or other assets, associated with this entry"}]
+
+          :contents [{:type :ref
+                      :ref :content
+                      :cardinality :many
+                      :isComponent true}]}]
+
+ ;; journals
+ :journal {:name [{:doc "Display name for this Journal"}]
+
+           :entries [{:type :ref
+                      :ref :entry
+                      :cardinality :many
+                      :isComponent true
+                      :doc "Pointer to a list of journal entires"}]}
+
+ ;; assets
+ :asset {:id [{:type :uuid
+               :unique :value
+               :required true}]
+
+         :externalid [{}]
+         :filename [{}]
+         :size [{}]
+         :type [{}]
+
+         :entry [{:type :ref
+                  :ref {:ns :entry}
+                  :doc "The journal entry associated with this asset"}]}
+
+ :books {:accounts [{:type :ref
+                     :ref {:ns :account}
+                     :cardinality :many
+                     :doc
+                     "Refencing the set of accounts belonging to this bookkeeping"}]
+
+         :journals [{:type :ref
+                     :ref {:ns :journal
+                           :rval :journal}
+                     :cardinality :many
+                     :doc
+                     "Referencing the set of journals belonging to this bookkeeping"}]}
+
+ :user {
+        :username [{:unique :value
+                    ;;:required true
+                    :doc "A user's username"}]
+
+        :password [{:doc "A user's password"}]
+
+        ;;:accountLevel [{:type :ref :ref :doc "A user's account level"}]
+
+        :defaultgroup
+        [{:type :ref
+          :ref {:ns :group}
+          :doc "A user can be a member of many groups. This points to the default one"}]
+
+        :firstname [{:type :string}]
+
+        :lastname [{:type :string}]
+
+        :email [{:type :string}]
+
+        :country  [{:type :ref
+                    :ref {:ns :country}}]}
+
+ :group {
+         :name [{:unique :value
+                 :doc "A group's name"}]
+
+         :owner [{:type :ref
+                  :ref {:ns :user}
+                  :doc "The groups's owner"}]
+
+         :users [{:type :ref
+                  :ref {:ns :user}
+                  :cardinality :many
+                  :doc "The users belonging to this group"}]
+
+         :defaultCurrency [{:type :ref
+                            :ref {:ns :currency}
+                            :doc "The groups's default currency"}]
+
+         :books [{:type :ref
+                  :ref {:ns :books
+                        :rval :groups}
+                  :cardinality :many
+                  :isComponent true
+                  :doc "The set of books belonging to this group"}]}
+
+ :system {
+          :currencies [{:type :ref
+                        :cardinality :many
+                        :ref {:ns :currency}}]
+
+          :countries [{:type :ref
+                       :cardinality :many
+                       :ref {:ns :country}}]
+
+          :groups [{:type :ref
+                    :ref {:ns :group
+                          :rval :group}
+                    :cardinality :many
+                    :doc "The groups that are part of the system"}]}}
