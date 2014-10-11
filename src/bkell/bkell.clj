@@ -30,7 +30,8 @@
   (reset! system (hco/start (hco/system topology config))))
 
 (defn stop []
-  (hco/stop @system))
+  (if-not (nil? @system)
+    (hco/stop @system)))
 
 (defn reset []
   (stop)
