@@ -48,6 +48,8 @@ These are the core entities in the system. The main business transactions are ad
 - [ok] setup test infrastructure (using test.check)
 - [ok] setup component architecture
 - [ok] establish core data structure (datomic schema)
+- tests around componenet architecture 
+- change password on user creation
 - datomic wrapper (using adi), with nominal CRUD operations; the abouve data structure constraints must be maintained when manipulating entites in the system.
   - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
 - import / export data 
