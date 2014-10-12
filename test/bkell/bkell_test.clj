@@ -24,7 +24,4 @@
 
 
 (comment
-
-  (midje.repl/autotest)
-
-  )
+  (midje.repl/autotest))
