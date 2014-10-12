@@ -7,6 +7,7 @@
             [hara.component :as hco]
             [missing-utils.core :as mu]
 
+            [bkell.config :as config]
             [bkell.component.bkell :as cb]
             [bkell.component.spittoon :as cs]))
 
