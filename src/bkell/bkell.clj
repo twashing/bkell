@@ -16,6 +16,14 @@
 (timbre/set-config! [:shared-appender-config :spit-filename] "logs/bkell.log")
 (timbre/set-config! [:appenders :spit :enabled?] true)
 
+(defn log-trace! [] (timbre/set-level! :trace))
+(defn log-debug! [] (timbre/set-level! :debug))
+(defn log-info! [] (timbre/set-level! :info))
+(defn log-warn! [] (timbre/set-level! :warn))
+(defn log-error! [] (timbre/set-level! :error))
+(defn log-fatal! [] (timbre/set-level! :fatal))
+(defn log-report! [] (timbre/set-level! :report))
+
 
 ;; Bkell State
 (def ^{:doc "Bkell's component system map"} system (atom nil))

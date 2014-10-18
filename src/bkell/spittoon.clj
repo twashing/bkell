@@ -1,7 +1,7 @@
 (ns bkell.spittoon
   (:require [adi.core :as adi]
             [adi.utils :refer [iid ?q]]
-            [bkell.config :as cfg]))
+            [bkell.config :as config]))
 
 (defn db-getconnection
   ([env]
@@ -11,12 +11,12 @@
            default-file (:db-default-file env)
            db-url (:db-url env)]
 
-       (adi/datastore db-url (cfg/load-edn schema-file) install-schema? recreate-db?))))
+       (adi/datastore db-url (config/load-edn schema-file) install-schema? recreate-db?))))
 
 (defn db-setup-default
   ([env]
      (let [default-file (:db-default-file env)
-           default-loaded  (eval (cfg/load-edn default-file))]
+           default-loaded  (eval (config/load-edn default-file))]
 
        (db-setup-default env (db-getconnection env true true) default-loaded)))
 
