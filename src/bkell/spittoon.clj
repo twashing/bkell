@@ -6,7 +6,7 @@
 (defn db-getconnection
   ([env]
      (db-getconnection env false false))
-  ([env install-schema? recreate-db? ]
+  ([env install-schema? recreate-db?]
      (let [schema-file (:db-schema-file env)
            default-file (:db-default-file env)
            db-url (:db-url env)]

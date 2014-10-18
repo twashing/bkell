@@ -1,6 +1,7 @@
 (ns bkell.component.spittoon
   (:require  [taoensso.timbre :as timbre]
-             [hara.component :as hco]))
+             [hara.component :as hco]
+             [bkell.spittoon :as sp]))
 
 
 
@@ -14,7 +15,7 @@
   (-start [sp]
 
     (timbre/trace "Spittoon.start CALLED > system[" sp "]")
-    (let [db (db-getconnection sp)]
+    (let [db (sp/db-getconnection sp)]
       (assoc sp :db db)))
 
   (-stop [sp]
