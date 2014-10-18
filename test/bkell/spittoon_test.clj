@@ -8,15 +8,17 @@
             [clojure.test.check.properties :as prop]
             [adi.utils :refer [iid ?q]]
 
+            [bkell.bkell :as bkell]
             [bkell.config :as config]))
 
 
-#_(defspec test-db-getconnection
+(defspec test-db-getconnection
   100
   (prop/for-all [_ gen/int]
 
-                (= '(:host :db-schema-file :db-default-file :db-url)
-                   (config/get-config :test))))
+                (= '(:conn :options :schema)
+                   (keys (spit/db-getconnection
+                           (config/get-config :test) true true)))))
 
 #_(defspec test-db-setup-default
   100
@@ -26,4 +28,5 @@
                    (config/get-project-config :test))))
 
 (comment
+  (bkell/log-info!)
   (midje.repl/autotest))
