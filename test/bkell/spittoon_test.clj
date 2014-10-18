@@ -20,12 +20,13 @@
                    (keys (spit/db-getconnection
                            (config/get-config :test) true true)))))
 
-#_(defspec test-db-setup-default
+(defspec test-db-setup-default
   100
   (prop/for-all [_ gen/int]
 
-                (= '(:project-info :host :db-schema-file :db-default-file :db-url)
-                   (config/get-project-config :test))))
+                (= '(:db-before :db-after :tx-data :tempids)
+                   (spit/db-setup-default
+                    (config/get-config :test)))))
 
 (comment
   (bkell/log-info!)

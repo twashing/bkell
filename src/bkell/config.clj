@@ -33,7 +33,7 @@
                            (seq config)))
            configM (assoc configM :host (env/env :host))]
 
-       (timbre/debug "config MERGED[" configM "]")
+       (timbre/trace "config MERGED[" configM "]")
        configM)))
 
 (defn get-project-config
