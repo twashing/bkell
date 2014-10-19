@@ -47,7 +47,7 @@ These are the core entities in the system. The main business transactions are ad
 
 This is a matrix of the data creation strategies for each given environment.
 
-Env / DB     create  conn  init  import
+Env / DB   | create |conn |init |import
 -----------|--------|-----|-----|-------
 at repl    |        |  Y  |     |  Y
 with tests |   Y    |  Y  |  Y  |
