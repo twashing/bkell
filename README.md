@@ -43,18 +43,38 @@ These are the core entities in the system. The main business transactions are ad
     - query within date ranges
     - only a group's users (incl. owner) can CRUD this data
 
+#### Data Access
+
+This is a matrix of the data creation strategies for each given environment.
+
+Env / DB     create  conn  init  import
+-----------|--------|-----|-----|-------
+at repl    |        |  Y  |     |  Y
+with tests |   Y    |  Y  |  Y  |
+in PROD    |        |  Y  |     |
+import 1   |   Y    |  Y  |  Y  |  Y
+improt 2   |        |  Y  |     |  Y
+
+
+
 ## Todo List
 
 - [ok] setup test infrastructure (using test.check)
 - [ok] setup component architecture
 - [ok] establish core data structure (datomic schema)
-- tests around componenet architecture 
-- change password on user creation
+- tests around componenet architecture (don't test functions pertaining to 3rd party lib)
+
+- separate import data function
+- create db on start (:test)
+- import default data on start (:test)
+- just get a connection to an existing db (:dev, :prod)
+
 - datomic wrapper (using adi), with nominal CRUD operations; the abouve data structure constraints must be maintained when manipulating entites in the system.
   - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
-- import / export data 
-- runnable scripts ; include code examples for adding account(s) and entries 
 
+- change password on user creation
+- separate export data  function
+- runnable scripts ; include code examples for adding account(s) and entries 
 
 ## License
 

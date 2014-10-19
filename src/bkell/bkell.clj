@@ -46,7 +46,6 @@
   (stop)
   (refresh :after 'bkell.bkell/start))
 
-
 (defn ^{:doc "This help function"}
   help []
   (let [shell-members (mu/fns-in-ns 'bkell.bkell)
