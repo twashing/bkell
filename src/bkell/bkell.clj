@@ -26,25 +26,46 @@
 
 
 ;; Bkell State
-(def ^{:doc "Bkell's component system map"} system (atom nil))
+(def ^{:doc "Bkell's component system map"} system nil)
 
 
-(def topology {:bkell    [cb/map->Bkell :spittoon]
+#_(def topology {:bkell    [cb/map->Bkell :spittoon]
                :spittoon [cs/map->Spittoon]})
 
-(def config   {:bkell {}
+#_(def config   {:bkell {}
                :spittoon {}})
 
+
+(def topology {:bkell    [cb/map->Bkell] })
+
+(def config   {:bkell {}})
+
 (defn start []
-  (reset! system (hco/start (hco/system topology config))))
+  (def system (hco/start (hco/system topology config))))
 
 (defn stop []
-  (if-not (nil? @system)
-    (hco/stop @system)))
+  (if-not (nil? system)
+    (hco/stop system)))
 
 (defn reset []
   (stop)
-  (refresh :after 'bkell.bkell/start))
+  (start))
+
+
+
+(defn import-create! [data group]
+
+  ;; Tranducers here... yeah :)
+  )
+
+
+(defn import! [data group]
+  )
+
+
+;; (+ 1 2 3) C-u C-x C-e
+
+
 
 (defn ^{:doc "This help function"}
   help []
@@ -61,4 +82,11 @@
                     (with-out-str (newline))]
                    (map extract-doc-fn shell-members)))))
 
+
 (defn ^{:doc "Reloads project configuration and libraries"} reload-project [] (user/reload-project))
+
+(comment
+
+  (start)
+  (reset)
+  (stop))

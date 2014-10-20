@@ -12,10 +12,11 @@
                  [environ "1.0.0"]
                  [missing-utils "0.1.5"]]
 
-  :repl-options {:init-ns bkell.bkell}
+  ;;:repl-options {:init-ns bkell.bkell}
 
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/test.check "0.5.9"]
                                   [midje "1.6.3"]
                                   [alembic "0.2.1"]]
-                   :plugins [[lein-midje "3.1.1"]]}})
+                   :plugins [[lein-midje "3.1.1"]
+                             [cider/cider-nrepl "0.7.0"]]}})
