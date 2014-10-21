@@ -1,5 +1,6 @@
 (ns bkell.spittoon-test
-  (:require [bkell.spittoon :as spit]
+  (:require [taoensso.timbre :as timbre]
+            [bkell.spittoon :as spit]
             [midje.sweet :refer :all]
             [midje.repl]
 
@@ -12,7 +13,7 @@
             [bkell.config :as config]))
 
 
-(defspec test-db-getconnection
+#_(defspec test-db-getconnection
   100
   (prop/for-all [_ gen/int]
 
@@ -20,13 +21,27 @@
                    (keys (spit/db-getconnection
                            (config/get-config :test) true true)))))
 
-(defspec test-db-setup-default
+#_(defspec test-db-setup-default
   100
   (prop/for-all [_ gen/int]
 
                 (= '(:db-before :db-after :tx-data :tempids)
-                   (spit/db-setup-default
-                    (config/get-config :test)))))
+                   @(spit/db-setup-default
+                    (config/get-config :test)) )))
+
+;; env - [nil | invalid-hash-shape | valid-hash-shape]
+;; :db-schema-file
+;; :db-default-file - [nil | invalid-file-location | valid-file-location]
+;; :db-url
+(defspec test-goodinputto-dbcreate
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [env (:test (config/load-edn "test/config.edn"))
+                      schema-file "db/schema-adi.edn"]
+
+                  (= '(:conn :options :schema)
+                     (keys (spit/db-create env schema-file))))))
 
 (comment
   (bkell/log-info!)

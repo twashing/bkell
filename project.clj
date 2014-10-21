@@ -12,7 +12,7 @@
                  [environ "1.0.0"]
                  [missing-utils "0.1.5"]]
 
-  ;;:repl-options {:init-ns bkell.bkell}
+  :repl-options {:init-ns bkell.bkell}
 
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/test.check "0.5.9"]

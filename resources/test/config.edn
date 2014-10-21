@@ -1,0 +1,3 @@
+{:test {:db-schema-file "db/schema-adi.edn"
+        :db-default-file "db/default.edn"
+        :db-url "datomic:mem://bkell"}}
