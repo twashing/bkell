@@ -10,7 +10,8 @@
                  [com.datomic/datomic-free "0.9.4899"]
                  [im.chit/hara.component "2.1.4"]
                  [environ "1.0.0"]
-                 [missing-utils "0.1.5"]]
+                 [missing-utils "0.1.5"]
+                 [slingshot "0.12.1"]]
 
   :repl-options {:init-ns bkell.bkell}
 
