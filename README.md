@@ -62,7 +62,7 @@ improt 2   |        |  Y  |     |  Y
 - [ok] setup test infrastructure (using test.check)
 - [ok] setup component architecture
 - [ok] establish core data structure (datomic schema)
-- tests around componenet architecture (don't test functions pertaining to 3rd party lib)
+- tests around componenet architecture (won't test functions pertaining to 3rd party lib)
 
 - separate import data function
 - create db on start (:test)

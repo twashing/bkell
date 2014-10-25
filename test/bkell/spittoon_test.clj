@@ -22,23 +22,6 @@
   (gen/recursive-gen container-type-except-map gen/simple-type))
 
 
-
-#_(defspec test-db-getconnection
-  100
-  (prop/for-all [_ gen/int]
-
-                (= '(:conn :options :schema)
-                   (keys (spit/db-getconnection
-                           (config/get-config :test) true true)))))
-
-#_(defspec test-db-setup-default
-  100
-  (prop/for-all [_ gen/int]
-
-                (= '(:db-before :db-after :tx-data :tempids)
-                   @(spit/db-setup-default
-                    (config/get-config :test)) )))
-
 ;; env - [nil | invalid-hash-shape | valid-hash-shape]
 ;; :db-schema-file
 ;; :db-default-file - [nil | invalid-file-location | valid-file-location]
@@ -66,8 +49,30 @@
                      (sort (keys a))))))
 
 
-;; (defspec test-goodinputto-db-conn )
-;; (defspec test-badinputto-db-conn )
+;; (defspec  )
+;; (defspec  )
+
+(defspec test-goodinputto-db-conn
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [env (:test (config/load-edn "test/config.edn"))
+                      schema-file "db/schema-adi.edn"]
+
+                  (= '(:conn :options :schema)
+                     (keys (spit/db-conn env schema-file))))))
+
+(defspec test-badinputto-db-conn
+  10
+  (prop/for-all [env any-except-map  ;; not a hash | empty hash | a hash without the keys '(:db-schema-file :db-schema-file :db-url)
+                 schema-file gen/string  ;; not a string
+                 ]
+
+                (let [a (try+ (spit/db-conn env schema-file)
+                              (catch [:type :bad-input] e &throw-context))]
+
+                  (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
+                     (sort (keys a))))))
 
 ;; (defspec test-goodinputto-db-init )
 ;; (defspec test-badinputto-db-init )

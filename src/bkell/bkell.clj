@@ -64,9 +64,6 @@
   )
 
 
-;; (+ 1 2 3) C-u C-x C-e
-
-
 
 (defn ^{:doc "This help function"}
   help []
