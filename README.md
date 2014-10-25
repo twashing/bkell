@@ -4,6 +4,26 @@ _Bkell_ provides a Shell and API for maintaining balanced records for business t
 
 For a more detailed description of double-entry bookkeeping concepts, refer to [Wikipedia](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
 
+## Running
+
+Starting a repl should drop you into the shell namespace `bkell.bkell`. You can start and stop the system with the `(start)` `(stop)` commands. Or you can simply get a list of commands by executing `help`.
+```
+=> (start)
+#sys{:spittoon #sp{...} :bkell #bk{...}}
+
+=> (stop)
+#sys{:spittoon #sp{...} :bkell #bk{}}
+
+=> (help)
+```
+
+#### Tests
+
+You can run the project's tests with this command
+```
+$ lein midje
+```
+
 ## Architecture 
 
 The user works in a shell environment, manipulating the core data structures of the system. Bkell uses [Clojure](http://clojure.org/) for its runtime, and [Datomic](http://www.datomic.com/) as its datastore. The system is comprised, mostly of simple functions, and a data abstraction layer to push and pull data, into and out of the database. 
