@@ -27,8 +27,8 @@
 (defn db-init
   ([env] (db-init env (:db-schema-file env)))
   ([env schema-file]
-     (let [ds (db-conn env schema-file)
-           default-file (:db-default-file env)]
+     (let [ds (try+ (db-conn env schema-file) (catch Exception e (throw+ {:type :bad-input})))
+           default-file (try+ (:db-default-file env) (catch Exception e (throw+ {:type :bad-input})))]
 
        (adi/insert! ds (eval (config/load-edn default-file)) schema-file))))
 

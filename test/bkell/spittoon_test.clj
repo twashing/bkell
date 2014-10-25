@@ -48,10 +48,6 @@
                   (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
                      (sort (keys a))))))
 
-
-;; (defspec  )
-;; (defspec  )
-
 (defspec test-goodinputto-db-conn
   10
   (prop/for-all [_ gen/int]
@@ -74,8 +70,30 @@
                   (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
                      (sort (keys a))))))
 
-;; (defspec test-goodinputto-db-init )
-;; (defspec test-badinputto-db-init )
+(defspec test-goodinputto-db-init
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [env (:test (config/load-edn "test/config.edn"))
+                      schema-file "db/schema-adi.edn"
+
+                      _ (spit/db-create env schema-file)
+                      result (keys @(spit/db-init env schema-file))]
+
+                  (= '(:db-before :db-after :tx-data :tempids) result))))
+
+(defspec test-badinputto-db-init
+  10
+  (prop/for-all [env any-except-map  ;; not a hash | empty hash | a hash without the keys '(:db-schema-file :db-schema-file :db-url)
+                 schema-file gen/string  ;; not a string
+                 ]
+
+                (let [a (try+ (spit/db-init env schema-file)
+                              (catch [:type :bad-input] e &throw-context))]
+
+                  (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
+                     (sort (keys a))))))
+
 
 ;; (defspec test-goodinputto-db-import )
 ;; (defspec test-badinputto-db-import )
