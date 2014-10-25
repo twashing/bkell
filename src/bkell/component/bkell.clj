@@ -12,6 +12,7 @@
 
     (timbre/trace "Bkell.start CALLED > system[" bk "]")
     (assoc bk :status "started"))
+
   (-stop [bk]
 
     (timbre/trace "Bkell.stop CALLED > system[" bk "]")

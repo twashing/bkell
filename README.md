@@ -59,27 +59,20 @@ improt 2   |        |  Y  |     |  Y
 
 ## Todo List
 
-- [ok] setup test infrastructure (using test.check)
-- [ok] setup component architecture
-- [ok] establish core data structure (datomic schema)
-- [x] tests around componenet architecture (won't test functions pertaining to 3rd party lib)
-- create db on start (:test)
-- just get a connection to an existing db (:dev, :prod)
-
-- separate import data function (we need insert-in, then we can constrain the data being inserted)
-- import default data on start (:test)
-  - import users (under :users), if you are the group owner
-  - import accounts, journals, and journal entries (under :books), if your user is a member of the group
-
 - datomic wrapper (using adi)
   - with nominal CRUD operations
   - with {create,retrieve,update,delete}-in, constraining the data's context
   - the abouve data structure constraints must be maintained when manipulating entites in the system.
   - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
 
-- login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
+- separate import data function (we need insert-in, then we can constrain the data being inserted)
+- import default data on start (:test)
+  - import users (under :users), if you are the group owner
+  - import accounts, journals, and journal entries (under :books), if your user is a member of the group
+
 - change password on user creation
 - separate export data  function
+- login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
 - runnable scripts ; include code examples for adding account(s) and entries 
 - don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
 

@@ -9,19 +9,23 @@
             [midje.repl]))
 
 
-#_(defspec started-system-has-expected-components
-  100
+(defspec started-system-has-expected-components
+  10
   (prop/for-all [_ gen/int]
 
                 (bkell/start)
-                (= '(:bkell :spittoon) (keys @bkell/system))))
+                (= '(:bkell :spittoon) (keys bkell/system))))
 
-;; stop
+(defspec stopped-system-is-nil
+  10
+  (prop/for-all [_ gen/int]
 
-;; reset
-
-;; spittoon - created (and loaded) database
+                (let [_ (bkell/start)
+                      _ (bkell/stop)]
+                  (= nil (-> bkell/system :spittoon :db)))))
 
 
 (comment
-  (midje.repl/autotest))
+  (bkell/log-info!)
+  (midje.repl/autotest)
+  (midje.repl/load-facts))

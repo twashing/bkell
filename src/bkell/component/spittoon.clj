@@ -13,7 +13,7 @@
   hco/IComponent
 
   (-start [sp]
-    (timbre/error "Spittoon.start CALLED > system[" sp "]")
+    (timbre/trace "Spittoon.start CALLED > system[" sp "]")
     (if (:recreate? sp)
       (assoc sp :db (do (sp/db-create (:env sp))
                         (sp/db-conn (:env sp))

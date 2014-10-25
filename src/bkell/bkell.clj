@@ -26,7 +26,7 @@
 (defn log-report! [] (timbre/set-level! :report))
 
 (def environment-mode :dev)
-
+(def system nil)
 
 ;; Bkell State
 (def ^{:doc "Bkell's component system map"} system nil)
@@ -40,23 +40,19 @@
                           :recreate? true}})
 
 (defn start []
-  (def system (hco/start (hco/system topology config))))
+  (alter-var-root #'system (constantly (hco/start (hco/system topology config)))))
 
 (defn stop []
-  (if-not (nil? system)
-    (hco/stop system)))
+  (alter-var-root #'system (fn [s] (when s (hco/stop system)))))
 
 (defn reset []
   (stop)
   (start))
 
 
-(defn import-create! [data group]
-  ;; Tranducers here... yeah :)
-  )
+(defn import-create! [data group] )
 
-
-(defn import! [data group]  )
+(defn import! [data group] )
 
 
 (defn ^{:doc "This help function"}
