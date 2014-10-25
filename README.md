@@ -81,6 +81,7 @@ improt 2   |        |  Y  |     |  Y
 - change password on user creation
 - separate export data  function
 - runnable scripts ; include code examples for adding account(s) and entries 
+- don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
 
 ## License
 

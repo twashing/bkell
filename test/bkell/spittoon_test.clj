@@ -21,6 +21,7 @@
 (def any-except-map
   (gen/recursive-gen container-type-except-map gen/simple-type))
 
+(def environment-mode :test)
 
 ;; env - [nil | invalid-hash-shape | valid-hash-shape]
 ;; :db-schema-file
@@ -30,7 +31,7 @@
   10
   (prop/for-all [_ gen/int]
 
-                (let [env (:test (config/load-edn "test/config.edn"))
+                (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"]
 
                   (= '(:conn :options :schema)
@@ -52,7 +53,7 @@
   10
   (prop/for-all [_ gen/int]
 
-                (let [env (:test (config/load-edn "test/config.edn"))
+                (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"]
 
                   (= '(:conn :options :schema)
@@ -74,7 +75,7 @@
   10
   (prop/for-all [_ gen/int]
 
-                (let [env (:test (config/load-edn "test/config.edn"))
+                (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"
 
                       _ (spit/db-create env schema-file)

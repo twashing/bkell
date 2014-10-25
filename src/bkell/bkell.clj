@@ -25,21 +25,19 @@
 (defn log-fatal! [] (timbre/set-level! :fatal))
 (defn log-report! [] (timbre/set-level! :report))
 
+(def environment-mode :dev)
+
 
 ;; Bkell State
 (def ^{:doc "Bkell's component system map"} system nil)
 
 
-#_(def topology {:bkell    [cb/map->Bkell :spittoon]
+(def topology {:bkell    [cb/map->Bkell :spittoon]
                :spittoon [cs/map->Spittoon]})
 
-#_(def config   {:bkell {}
-               :spittoon {}})
-
-
-(def topology {:bkell    [cb/map->Bkell] })
-
-(def config   {:bkell {}})
+(def config   {:bkell {}
+               :spittoon {:env (environment-mode (config/load-edn "config.edn"))
+                          :recreate? true}})
 
 (defn start []
   (def system (hco/start (hco/system topology config))))
@@ -53,16 +51,12 @@
   (start))
 
 
-
 (defn import-create! [data group]
-
   ;; Tranducers here... yeah :)
   )
 
 
-(defn import! [data group]
-  )
-
+(defn import! [data group]  )
 
 
 (defn ^{:doc "This help function"}
