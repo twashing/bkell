@@ -33,8 +33,16 @@
        (adi/insert! ds (eval (config/load-edn default-file)) schema-file))))
 
 (defn db-import
-  ([env group data] (db-import env group data (db-conn env (:db-schema-file env))))
+  ([env group data]
+     (db-import env group data (db-conn env (:db-schema-file env))))
   ([env group data data-store]
 
      ;; we need insert-in, then we can constrain the data being inserted, to the client group
+
+     ;; import users (under :users), if you are the group owner
+     ;; import accounts, journals, and journal entries (under :books), if your user is a member of the group
+
+     ;; assumes a login mechanism in the shell and this function is either
+     ;; i. executed in a scope where the current_user exists or
+     ;; ii. the current_user is passed into the function
      (adi/insert! data-store data)))
