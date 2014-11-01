@@ -1,6 +1,6 @@
 (ns bkell.spittoon
   (:require [adi.core :as adi]
-            [adi.utils :refer [iid ?q]]
+            [adi.data.common :refer [iid]]
             [slingshot.slingshot :refer [try+ throw+]]
             [bkell.config :as config]))
 
@@ -12,7 +12,7 @@
   ([env] (db-create env (:db-schema-file env)))
   ([env schema-file]
      (try+
-      (adi/datastore (:db-url env) (config/load-edn schema-file) true true)
+      (adi/connect! (:db-url env) (config/load-edn schema-file) true true)
       (catch Exception e
         (throw+ {:type :bad-input})))))
 
@@ -20,7 +20,7 @@
   ([env] (db-conn env (:db-schema-file env)))
   ([env schema-file]
      (try+
-      (adi/datastore (:db-url env) (config/load-edn schema-file) false false)
+      (adi/connect! (:db-url env) (config/load-edn schema-file) false false)
       (catch Exception e
         (throw+ {:type :bad-input})))))
 

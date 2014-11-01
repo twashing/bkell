@@ -3,7 +3,7 @@
             [clojure.tools.namespace.repl :refer (refresh)]
             [adi.core :as adi]
             [adi.schema :as as]
-            [adi.utils :refer [iid ?q]]
+            [adi.data.common :refer [iid]]
             [hara.component :as hco]
             [missing-utils.core :as mu]
 

@@ -6,9 +6,9 @@
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha1"]
                  [com.taoensso/timbre "3.3.1"]
-                 [adi "0.1.6"]
                  [com.datomic/datomic-free "0.9.4899"]
-                 [im.chit/hara.component "2.1.4"]
+                 [im.chit/hara.component "2.1.7"]
+                 [im.chit/adi "0.3.1-SNAPSHOT"]
                  [environ "1.0.0"]
                  [missing-utils "0.1.5"]
                  [slingshot "0.12.1"]]

@@ -1,7 +1,7 @@
 (ns bkell.component.bkell
   (:require [taoensso.timbre :as timbre]
             [hara.component :as hco]
-            [adi.utils :refer [iid ?q]]))
+            [adi.data.common :refer [iid]]))
 
 (defrecord Bkell []
   Object

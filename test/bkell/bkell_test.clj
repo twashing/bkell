@@ -4,8 +4,6 @@
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
-            [adi.utils :refer [iid ?q]]
-
             [midje.repl]))
 
 
