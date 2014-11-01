@@ -57,7 +57,7 @@
  :journal {:name [{:doc "Display name for this Journal"}]
 
            :entries [{:type :ref
-                      :ref :entry
+                      :ref {:ns :entry}
                       :cardinality :many
                       :isComponent true
                       :doc "Pointer to a list of journal entires"}]}

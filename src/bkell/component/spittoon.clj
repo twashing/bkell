@@ -13,11 +13,11 @@
 
   hco/IComponent
 
+  ;; TODO - (maybe) monadically execute
   (-start [sp]
     (timbre/trace "Spittoon.start CALLED > system[" sp "]")
     (if (:recreate? sp)
       (assoc sp :db (do (sp/db-create (:env sp))
-                        (sp/db-conn (:env sp))
                         (sp/db-init (:env sp))))
       (assoc sp :db (sp/db-conn (:env sp)))))
 

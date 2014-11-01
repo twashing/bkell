@@ -1,67 +1,67 @@
 [{:system
 
-  {:currencies #{{:db/id (adi.data.common/iid :currency-ca)
+  {:currencies #{{:db/id [[:currency-ca]]
                   :id "CDN" :name "Canadian Dollar"}
-                 {:db/id (adi.data.common/iid :currency-usd)
+                 {:db/id [[:currency-usd]]
                   :id "USD" :name "United States Dollar"}
-                 {:db/id (adi.data.common/iid :currency-eur)
+                 {:db/id [[:currency-eur]]
                   :id "EUR" :name "European Euro"}
-                 {:db/id (adi.data.common/iid :currency-gbp)
+                 {:db/id [[:currency-gbp]]
                   :id "GBP" :name "Great British Pound"}
-                 {:db/id (adi.data.common/iid :currency-yen)
+                 {:db/id [[:currency-yen]]
                   :id "YEN" :name "Japanese Yen"}
-                 {:db/id (adi.data.common/iid :currency-aud)
+                 {:db/id [[:currency-aud]]
                   :id "AUD" :name "Australian Dollar"}
-                 {:db/id (adi.data.common/iid :currency-zar)
+                 {:db/id [[:currency-zar]]
                   :id "ZAR" :name "South African Rand"}
-                 {:db/id (adi.data.common/iid :currency-cny)
+                 {:db/id [[:currency-cny]]
                   :id "CNY" :name "Chinese Yuan Renminbi"}
-                 {:db/id (adi.data.common/iid :currency-rub)
+                 {:db/id [[:currency-rub]]
                   :id "RUB" :name "Russian Ruble"}
-                 {:db/id (adi.data.common/iid :currency-brl)
+                 {:db/id [[:currency-brl]]
                   :id "BRL" :name "Brazilian Ruble"}
-                 {:db/id (adi.data.common/iid :currency-inr)
+                 {:db/id [[:currency-inr]]
                   :id "INR" :name "Indian Rupee"}}
 
-   :countries #{{:db/id (adi.data.common/iid :country-ca)
+   :countries #{{:db/id [[:country-ca]]
                  :id "CA" :name "Canada"}
-                {:db/id (adi.data.common/iid :country-us)
+                {:db/id [[:country-us]]
                  :id "US" :name "United States"}
-                {:db/id (adi.data.common/iid :country-eu)
+                {:db/id [[:country-eu]]
                  :id "EU" :name "Europe"}
-                {:db/id (adi.data.common/iid :country-uk)
+                {:db/id [[:country-uk]]
                  :id "UK" :name "United Kingdom"}
-                {:db/id (adi.data.common/iid :country-jp)
+                {:db/id [[:country-jp]]
                  :id "JP" :name "Japan"}
-                {:db/id (adi.data.common/iid :country-au)
+                {:db/id [[:country-au]]
                  :id "AU" :name "Australia"}
-                {:db/id (adi.data.common/iid :country-za)
+                {:db/id [[:country-za]]
                  :id "ZA" :name "South Africa"}
-                {:db/id (adi.data.common/iid :country-cn)
+                {:db/id [[:country-cn]]
                  :id "CN" :name "China"}
-                {:db/id (adi.data.common/iid :country-ru)
+                {:db/id [[:country-ru]]
                  :id "RU" :name "Russia"}
-                {:db/id (adi.data.common/iid :country-br)
+                {:db/id [[:country-br]]
                  :id "BR" :name "Brazil"}
-                {:db/id (adi.data.common/iid :country-in)
+                {:db/id [[:country-in]]
                  :id "IN" :name "India"}}
 
-   :groups #{{:db/id (adi.data.common/iid :group-webkell)
+   :groups #{{:db/id [[:group-webkell]]
 
               :name "webkell"
 
-              :users #{{:db/id (adi.data.common/iid :user-webkell)
+              :users #{{:db/id [[:user-webkell]]
                         :username "webkell"
                         :password "default"
                         :firstname "webkell"
                         :lastname "webkell"
                         :email "webkell"
-                        :defaultgroup {:+/db/id (adi.data.common/iid :group-webkell)}
-                        :country {:+/db/id (adi.data.common/iid :country-ca)}}}
+                        :defaultgroup {:+ {:db/id [[:group-webkell]]}}
+                        :country {:+ {:db/id [[:country-ca]]}}}}
 
-              :owner {:+/db/id (adi.data.common/iid :user-webkell)}
+              :owner {:+ {:db/id [[:user-webkell]]}}
 
-              :defaultCurrency {:+/db/id (adi.data.common/iid :currency-ca)}
+              :defaultCurrency {:+ {:db/id [[:currency-ca]]}}
 
               :books #{{:accounts #{{:name "cash"
                                      :type :asset

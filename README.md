@@ -79,6 +79,7 @@ improt 2   |        |  Y  |     |  Y
 
 ## Todo List
 
+- use Maybe Monad to execute component.spittoon/start
 - datomic wrapper (using adi)
   - with nominal CRUD operations
   - with {create,retrieve,update,delete}-in, constraining the data's context
