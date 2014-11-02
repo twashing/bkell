@@ -56,12 +56,12 @@
                         :firstname "webkell"
                         :lastname "webkell"
                         :email "webkell"
-                        :defaultgroup {:+ {:db/id [[:group-webkell]]}}
-                        :country {:+ {:db/id [[:country-ca]]}}}}
+                        :defaultgroup [[:group-webkell]]
+                        :country [[:country-ca]]}}
 
-              :owner {:+ {:db/id [[:user-webkell]]}}
+              :owner [[:user-webkell]]
 
-              :defaultCurrency {:+ {:db/id [[:currency-ca]]}}
+              :defaultCurrency [[:currency-ca]]
 
               :books #{{:accounts #{{:name "cash"
                                      :type :asset
