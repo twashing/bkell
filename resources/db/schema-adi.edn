@@ -76,7 +76,7 @@
                   :ref {:ns :entry}
                   :doc "The journal entry associated with this asset"}]}
 
- :books {:accounts [{:type :ref
+ :book {:accounts [{:type :ref
                      :ref {:ns :account}
                      :cardinality :many
                      :doc
@@ -130,7 +130,7 @@
                             :doc "The groups's default currency"}]
 
          :books [{:type :ref
-                  :ref {:ns :books
+                  :ref {:ns :book
                         :rval :groups}
                   :cardinality :many
                   :isComponent true
