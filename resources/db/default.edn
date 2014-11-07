@@ -1,56 +1,56 @@
 [{:system
 
-  {:currencies #{{:db/id [[:currency-ca]]
+  {:currencies #{{:+/db/id [[:currency-ca]]
                   :id "CDN" :name "Canadian Dollar"}
-                 {:db/id [[:currency-usd]]
+                 {:+/db/id [[:currency-usd]]
                   :id "USD" :name "United States Dollar"}
-                 {:db/id [[:currency-eur]]
+                 {:+/db/id [[:currency-eur]]
                   :id "EUR" :name "European Euro"}
-                 {:db/id [[:currency-gbp]]
+                 {:+/db/id [[:currency-gbp]]
                   :id "GBP" :name "Great British Pound"}
-                 {:db/id [[:currency-yen]]
+                 {:+/db/id [[:currency-yen]]
                   :id "YEN" :name "Japanese Yen"}
-                 {:db/id [[:currency-aud]]
+                 {:+/db/id [[:currency-aud]]
                   :id "AUD" :name "Australian Dollar"}
-                 {:db/id [[:currency-zar]]
+                 {:+/db/id [[:currency-zar]]
                   :id "ZAR" :name "South African Rand"}
-                 {:db/id [[:currency-cny]]
+                 {:+/db/id [[:currency-cny]]
                   :id "CNY" :name "Chinese Yuan Renminbi"}
-                 {:db/id [[:currency-rub]]
+                 {:+/db/id [[:currency-rub]]
                   :id "RUB" :name "Russian Ruble"}
-                 {:db/id [[:currency-brl]]
+                 {:+/db/id [[:currency-brl]]
                   :id "BRL" :name "Brazilian Ruble"}
-                 {:db/id [[:currency-inr]]
+                 {:+/db/id [[:currency-inr]]
                   :id "INR" :name "Indian Rupee"}}
 
-   :countries #{{:db/id [[:country-ca]]
+   :countries #{{:+/db/id [[:country-ca]]
                  :id "CA" :name "Canada"}
-                {:db/id [[:country-us]]
+                {:+/db/id [[:country-us]]
                  :id "US" :name "United States"}
-                {:db/id [[:country-eu]]
+                {:+/db/id [[:country-eu]]
                  :id "EU" :name "Europe"}
-                {:db/id [[:country-uk]]
+                {:+/db/id [[:country-uk]]
                  :id "UK" :name "United Kingdom"}
-                {:db/id [[:country-jp]]
+                {:+/db/id [[:country-jp]]
                  :id "JP" :name "Japan"}
-                {:db/id [[:country-au]]
+                {:+/db/id [[:country-au]]
                  :id "AU" :name "Australia"}
-                {:db/id [[:country-za]]
+                {:+/db/id [[:country-za]]
                  :id "ZA" :name "South Africa"}
-                {:db/id [[:country-cn]]
+                {:+/db/id [[:country-cn]]
                  :id "CN" :name "China"}
-                {:db/id [[:country-ru]]
+                {:+/db/id [[:country-ru]]
                  :id "RU" :name "Russia"}
-                {:db/id [[:country-br]]
+                {:+/db/id [[:country-br]]
                  :id "BR" :name "Brazil"}
-                {:db/id [[:country-in]]
+                {:+/db/id [[:country-in]]
                  :id "IN" :name "India"}}
 
-   :groups #{{:db/id [[:group-webkell]]
+   :groups #{{:+/db/id [[:group-webkell]]
 
               :name "webkell"
 
-              :users #{{:db/id [[:user-webkell]]
+              :users #{{:+/db/id [[:user-webkell]]
                         :username "webkell"
                         :password "default"
                         :firstname "webkell"

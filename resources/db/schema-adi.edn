@@ -24,7 +24,11 @@
            :counterWeight [{:type :enum
                             :default :debit
                             :enum {:ns :account.counterWeight
-                                   :values #{:debit :credit}}}]}
+                                   :values #{:debit :credit}}}]
+
+           :book    [{:type :ref
+                      :ref {:ns :book}
+                      :doc "The book that the journal belongs to"}]}
 
  ;; debits & credits
  :content {:type [{:type :enum
@@ -40,28 +44,23 @@
            :currency [{:type :ref
                        :ref {:ns :currency}}]}
 
- :entry [{:currency [{:type :ref
+ :entry  {:currency [{:type :ref
                       :ref {:ns :currency}}]
-
-          :assets [{:type :ref
-                    :ref :asset
-                    :cardinality :many
-                    :doc "Set of image or other assets, associated with this entry"}]
-
+                      
           :contents [{:type :ref
-                      :ref :content
+                      :ref {:ns :content}
                       :cardinality :many
-                      :isComponent true}]}]
+                      :isComponent true}]
+          :journal  [{:type :ref
+                      :ref {:ns :journal}
+                      :doc "The journal belonging to the entry"}]}
 
  ;; journals
  :journal {:name [{:doc "Display name for this Journal"}]
-
-           :entries [{:type :ref
-                      :ref {:ns :entry}
-                      :cardinality :many
-                      :isComponent true
-                      :doc "Pointer to a list of journal entires"}]}
-
+           :book    [{:type :ref
+                      :ref {:ns :book}
+                      :doc "The book that the journal belongs to"}]}
+                      
  ;; assets
  :asset {:id [{:type :uuid
                :unique :value
@@ -76,21 +75,13 @@
                   :ref {:ns :entry}
                   :doc "The journal entry associated with this asset"}]}
 
- :book {:accounts [{:type :ref
-                     :ref {:ns :account}
-                     :cardinality :many
-                     :doc
-                     "Refencing the set of accounts belonging to this bookkeeping"}]
+ :book {:name [{}]
 
-         :journals [{:type :ref
-                     :ref {:ns :journal
-                           :rval :journal}
-                     :cardinality :many
-                     :doc
-                     "Referencing the set of journals belonging to this bookkeeping"}]}
+        :group [{:type :ref
+                 :ref {:ns :group}
+                 :doc "The group that owns this book"}]}
 
- :user {
-        :username [{:unique :value
+ :user {:username [{:unique :value
                     ;;:required true
                     :doc "A user's username"}]
 
@@ -98,6 +89,12 @@
 
         ;;:accountLevel [{:type :ref :ref :doc "A user's account level"}]
 
+        :groups [{:type :ref
+                 :ref {:ns :group
+                       :rval :users}
+                 :cardinality :many
+                 :doc "The users belonging to this group"}]
+                 
         :defaultgroup
         [{:type :ref
           :ref {:ns :group}
@@ -112,32 +109,20 @@
         :country  [{:type :ref
                     :ref {:ns :country}}]}
 
- :group {
-         :name [{:unique :value
+ :group {:name [{:unique :value
                  :doc "A group's name"}]
 
          :owner [{:type :ref
-                  :ref {:ns :user}
+                  :ref {:ns :user
+                        :rval :owns}
                   :doc "The groups's owner"}]
 
-         :users [{:type :ref
-                  :ref {:ns :user}
-                  :cardinality :many
-                  :doc "The users belonging to this group"}]
-
          :defaultCurrency [{:type :ref
-                            :ref {:ns :currency}
-                            :doc "The groups's default currency"}]
+                            :ref {:ns :currency
+                                  :rval defaultGroups}
+                            :doc "The groups's default currency"}]}
 
-         :books [{:type :ref
-                  :ref {:ns :book
-                        :rval :groups}
-                  :cardinality :many
-                  :isComponent true
-                  :doc "The set of books belonging to this group"}]}
-
- :system {
-          :currencies [{:type :ref
+ :system {:currencies [{:type :ref
                         :cardinality :many
                         :ref {:ns :currency}}]
 
@@ -146,7 +131,6 @@
                        :ref {:ns :country}}]
 
           :groups [{:type :ref
-                    :ref {:ns :group
-                          :rval :group}
+                    :ref {:ns :group}
                     :cardinality :many
                     :doc "The groups that are part of the system"}]}}
