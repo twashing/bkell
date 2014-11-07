@@ -1,6 +1,6 @@
 (ns bkell.spittoon-test
   (:require [taoensso.timbre :as timbre]
-            [bkell.spittoon :as spit]
+            [bkell.spittoon :as sp]
             [midje.sweet :refer :all]
             [midje.repl]
 
@@ -33,8 +33,8 @@
                 (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"]
 
-                  (= '(:conn :options :schema)
-                     (keys (spit/db-create env schema-file))))))
+                  (= '(:meta :connection :schema)
+                     (keys (sp/db-create env schema-file))))))
 
 (defspec test-badinputto-db-create
   10
@@ -42,7 +42,7 @@
                  schema-file gen/string  ;; not a string
                  ]
 
-                (let [a (try+ (spit/db-create env schema-file)
+                (let [a (try+ (sp/db-create env schema-file)
                               (catch [:type :bad-input] e &throw-context))]
 
                   (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
@@ -55,8 +55,8 @@
                 (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"]
 
-                  (= '(:conn :options :schema)
-                     (keys (spit/db-conn env schema-file))))))
+                  (= '(:meta :connection :schema)
+                     (keys (sp/db-conn env schema-file))))))
 
 (defspec test-badinputto-db-conn
   10
@@ -64,7 +64,7 @@
                  schema-file gen/string  ;; not a string
                  ]
 
-                (let [a (try+ (spit/db-conn env schema-file)
+                (let [a (try+ (sp/db-conn env schema-file)
                               (catch [:type :bad-input] e &throw-context))]
 
                   (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
@@ -77,10 +77,10 @@
                 (let [env (environment-mode (config/load-edn "test/config.edn"))
                       schema-file "db/schema-adi.edn"
 
-                      _ (spit/db-create env schema-file)
-                      result (keys @(spit/db-init env schema-file))]
+                      _ (sp/db-create env schema-file)
+                      result (keys (first (sp/db-init env schema-file)))]
 
-                  (= '(:db-before :db-after :tx-data :tempids) result))))
+                  (= '(:system :db) result))))
 
 (defspec test-badinputto-db-init
   10
@@ -88,7 +88,7 @@
                  schema-file gen/string  ;; not a string
                  ]
 
-                (let [a (try+ (spit/db-init env schema-file)
+                (let [a (try+ (sp/db-init env schema-file)
                               (catch [:type :bad-input] e &throw-context))]
 
                   (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
