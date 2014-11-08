@@ -17,8 +17,9 @@
   (-start [sp]
     (timbre/trace "Spittoon.start CALLED > system[" sp "]")
     (if (:recreate? sp)
-      (assoc sp :db (do (sp/db-create (:env sp))
-                        (sp/db-init (:env sp))))
+      (let [db (sp/db-create (:env sp))
+            _ (sp/db-init (:env sp))]
+        (assoc sp :db db))
       (assoc sp :db (sp/db-conn (:env sp)))))
 
   (-stop [sp]
