@@ -63,7 +63,41 @@
 
               :defaultCurrency [[:currency-ca]]
 
-              :books #{{:accounts #{{:name "cash"
+              :books #{{:name "main"
+                        :accounts #{{:name "cash"
+                                     :type :asset
+                                     :counterWeight :debit}
+                                    {:name "debt"
+                                     :type :liability
+                                     :counterWeight :credit}
+                                    {:name "revenue"
+                                     :type :revenue
+                                     :counterWeight :credit}
+                                    {:name "expense"
+                                     :type :expense
+                                     :counterWeight :debit}}
+
+                        :journals #{{:name "generalledger"
+                                     :entries #{}}}}}}
+             {:+/db/id [[:group-guest]]
+
+              :name "guest"
+
+              :users #{{:+/db/id [[:user-guest]]
+                        :username "guest"
+                        :password "default"
+                        :firstname "guest"
+                        :lastname "guest"
+                        :email "guest"
+                        :defaultgroup [[:group-guest]]
+                        :country [[:country-ca]]}}
+
+              :owner [[:user-guest]]
+
+              :defaultCurrency [[:currency-ca]]
+
+              :books #{{:name "main"
+                        :accounts #{{:name "cash"
                                      :type :asset
                                      :counterWeight :debit}
                                     {:name "debt"

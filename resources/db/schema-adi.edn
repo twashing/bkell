@@ -46,7 +46,7 @@
 
  :entry  {:currency [{:type :ref
                       :ref {:ns :currency}}]
-                      
+
           :contents [{:type :ref
                       :ref {:ns :content}
                       :cardinality :many
@@ -60,7 +60,7 @@
            :book    [{:type :ref
                       :ref {:ns :book}
                       :doc "The book that the journal belongs to"}]}
-                      
+
  ;; assets
  :asset {:id [{:type :uuid
                :unique :value
@@ -94,7 +94,7 @@
                        :rval :users}
                  :cardinality :many
                  :doc "The users belonging to this group"}]
-                 
+
         :defaultgroup
         [{:type :ref
           :ref {:ns :group}

@@ -55,6 +55,7 @@ These are the core entities in the system. The main business transactions are ad
     - only a group's users (incl. owner) can CRUD this data
 
   - **Account**
+    - account addition or updates do not bleed into another group's accounts
     - no duplicates
     - only a group's users (incl. owner) can CRUD this data
 
