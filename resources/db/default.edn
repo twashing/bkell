@@ -78,7 +78,10 @@
                                      :counterWeight :debit}}
 
                         :journals #{{:name "generalledger"
-                                     :entries #{}}}}}}
+                                     :entries #{}}}}
+                       {:name "taxes"
+                        :accounts #{}
+                        :journals #{}}}}
              {:+/db/id [[:group-guest]]
 
               :name "guest"
@@ -111,4 +114,7 @@
                                      :counterWeight :debit}}
 
                         :journals #{{:name "generalledger"
-                                     :entries #{}}}}}}}}}]
+                                     :entries #{}}}}
+                       {:name "taxes"
+                        :accounts #{}
+                        :journals #{}}}}}}}]
