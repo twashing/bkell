@@ -63,14 +63,27 @@
                       result (try+ (dm/add-account ds group-name account)
                                    (catch AssertionError e &throw-context))]
 
-                  (println "1: " (keys result))
-
                   (= (sort '(:object :message :cause :stack-trace :throwable))
                      (sort (keys result))))))
 
-#_(defspec addaccount-goesto-correctgroup
-    10
-    (prop/for-all [account (account-generator)]))
+(defspec addaccount-goesto-correctgroup
+  10
+  (prop/for-all [account (account-generator)]
+
+                (let [group-name "webkell"
+                      group-name-alt "guest"
+                      ds (setup-db!)
+
+                      result (dm/add-account ds group-name account)
+
+                      result-check (adi/select ds {:account
+                                                   {:name (:name account)
+                                                    :book
+                                                    {:name "main"
+                                                     :group/name group-name-alt}}}
+                                               :ids)]
+
+                  (empty? result-check))))
 
 
 
