@@ -44,7 +44,9 @@
         :currency [{:type :ref
                     :ref {:ns :currency}}]}
 
- :entry  {:currency [{:type :ref
+ :entry  {:date [{:type :instant}]
+
+          :currency [{:type :ref
                       :ref {:ns :currency}}]
 
           :content [{:type :ref
