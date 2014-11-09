@@ -107,6 +107,9 @@ improt 2   |        |  Y  |     |  Y
                    :ref {:ns :journal}
                    :doc "The journal belonging to the entry"}]}
 ```
+- put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
+  - don't add duplicate accounts (solely within a given group)
+- for function constraints, evaluate typed.clojure vs. schema
 
 ## License
 
