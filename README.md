@@ -2,6 +2,27 @@
 
 _Bkell_ provides a Shell and API for maintaining balanced records for business transactions. It employs double-entry bookkeeping, where every entry to an account requires a corresponding and opposite entry to a different account. For instance, recording earnings of $100 would require making two entries: a debit entry of $100 to an account called "Cash" and a credit entry to an account called "Income."
 
+_Bkell_ uses the American Equation approach to balancing books. With it, transactions are recorded based on the equation `Assets = Liabilities + Capital`. The accounting equation is a statement of equality between the debits and the credits. The rules of debit and credit depend on the nature of an account. For the purpose of the accounting equation approach, all the accounts are classified into the following five types:
+- assets
+- liabilities 
+- income/revenues 
+- expenses
+- capital (gains / losses)
+
+If there is an increase or decrease in one account, there will be equal decrease or increase in a corresponding account or set of accounts. The rules are summarised below:
+
+           | debit | credit
+-----------|-------|-------
+asset      |   +   |   -
+-----------|-------|-------
+liability  |   -   |   +
+-----------|-------|-------
+revenue    |   -   |   +
+-----------|-------|-------
+expense    |   +   |   -
+-----------|-------|-------
+capital    |   -   |   +
+
 For a more detailed description of double-entry bookkeeping concepts, refer to [Wikipedia](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
 
 ## Running
@@ -93,7 +114,7 @@ improt 2   |        |  Y  |     |  Y
   - import accounts, journals, and journal entries (under :books), if your user is a member of the group
 
 - change password on user creation
-- separate export data  function
+- separate export data function
 - login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
 - runnable scripts ; include code examples for adding account(s) and entries 
 - don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
@@ -110,6 +131,8 @@ improt 2   |        |  Y  |     |  Y
 - put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
   - don't add duplicate accounts (solely within a given group)
 - for function constraints, evaluate typed.clojure vs. schema
+- an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
+
 
 ## License
 

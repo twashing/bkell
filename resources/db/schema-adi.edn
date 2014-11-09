@@ -19,7 +19,7 @@
            :type [{:type :enum
                    :default :asset
                    :enum {:ns :account.type
-                          :values #{:asset :liability :revenue :expense}}}]
+                          :values #{:asset :liability :revenue :expense :capital}}}]
 
            :counterWeight [{:type :enum
                             :default :debit
