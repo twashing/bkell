@@ -106,9 +106,26 @@
 
                       a1 {:name "one" :type :asset :counterWeight :debit}
                       a2 {:name "two" :type :asset :counterWeight :debit}
-                      accounts [a1 a2]]
+                      accounts [a1 a2]
 
-                  (acc/add-accounts ds group-name accounts))))
+                      _ (acc/add-accounts ds group-name accounts)]
+
+                  (let [r1 (adi/select ds {:account
+                                           {:name (:name a1)
+                                            :book
+                                            {:name "main"
+                                             :group/name group-name}}}
+                                       :ids)
+
+                        r2 (adi/select ds {:account
+                                           {:name (:name a2)
+                                            :book
+                                            {:name "main"
+                                             :group/name group-name}}}
+                                       :ids)]
+
+                    (and (-> r1 empty? not)
+                         (-> r2 empty? not))))))
 
 (comment
   (bkell/log-debug!)
