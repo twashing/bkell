@@ -31,35 +31,35 @@
                       :doc "The book that the journal belongs to"}]}
 
  ;; debits & credits
- :content {:type [{:type :enum
-                   :default :debit
-                   :enum {:ns :content.type
-                          :values #{:debit :credit}}}]
+ :side {:type [{:type :enum
+                :default :debit
+                :enum {:ns :side.type
+                       :values #{:debit :credit}}}]
 
-           :amount [{:type :float}]
+        :amount [{:type :float}]
 
-           :account [{:type :ref
-                      :ref {:ns :account}}]
+        :account [{:type :ref
+                   :ref {:ns :account}}]
 
-           :currency [{:type :ref
-                       :ref {:ns :currency}}]}
+        :currency [{:type :ref
+                    :ref {:ns :currency}}]}
 
  :entry  {:currency [{:type :ref
                       :ref {:ns :currency}}]
 
-          :contents [{:type :ref
-                      :ref {:ns :content}
-                      :cardinality :many
-                      :isComponent true}]
+          :content [{:type :ref
+                     :ref {:ns :side}
+                     :cardinality :many
+                     :isComponent true}]
           :journal  [{:type :ref
                       :ref {:ns :journal}
                       :doc "The journal belonging to the entry"}]}
 
  ;; journals
  :journal {:name [{:doc "Display name for this Journal"}]
-           :book    [{:type :ref
-                      :ref {:ns :book}
-                      :doc "The book that the journal belongs to"}]}
+           :book [{:type :ref
+                   :ref {:ns :book}
+                   :doc "The book that the journal belongs to"}]}
 
  ;; assets
  :asset {:id [{:type :uuid

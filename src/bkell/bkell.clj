@@ -39,8 +39,10 @@
                :spittoon {:env (environment-mode (config/load-edn "config.edn"))
                           :recreate? true}})
 
-(defn start []
-  (alter-var-root #'system (constantly (hco/start (hco/system topology config)))))
+(defn start
+  ([] (start config))
+  ([config]
+     (alter-var-root #'system (constantly (hco/start (hco/system topology config))))))
 
 (defn stop []
   (alter-var-root #'system (fn [s] (when s (hco/stop system)))))
@@ -77,4 +79,49 @@
 
   (start)
   (reset)
-  (stop))
+  (stop)
+
+  (ns bkell.bkell)
+  (require '[bkell.spittoon :as sp])
+  (require '[bkell.config :as config])
+  (require '[adi.core :as adi])
+
+  (def env (:test (config/load-edn "config.edn")))
+  (sp/db-create env)
+  (sp/db-init env)
+
+  (def schema-bkell (read-string (slurp "resources/db/schema-adi.edn")))
+  (def data-bkell (read-string (slurp "resources/db/default.edn")))
+
+  (def ds (adi/connect! "datomic:mem://adi-examples-bkell" schema-bkell true true))
+  (adi/insert! ds data-bkell)
+
+
+  (adi/select ds {:book
+                  {:name "main"
+                   :group/name "webkell"}}
+              :ids)
+
+  (adi/select ds {:journal
+                  {:name "generalledger"
+                   :book
+                   {:name "main"
+                    :group/name "webkell"}}}
+              :ids)
+
+  (adi/update! ds
+               {:book
+                {:name "main"
+                 :group/name "webkell"}}
+               {:book/accounts {:name "foo" :type :asset :counterWeight :debit}})
+
+  (adi/update! ds
+               {:journal
+                {:name "generalledger"
+                 :book
+                 {:name "main"
+                  :group/name "webkell"}}}
+               {:journal/entries {:content []}})
+
+
+  )

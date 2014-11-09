@@ -97,6 +97,16 @@ improt 2   |        |  Y  |     |  Y
 - login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
 - runnable scripts ; include code examples for adding account(s) and entries 
 - don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
+- don't think we need container pointers in schema
+```
+:entry {:content [{:type :ref
+                   :ref {:ns :side}
+                   :cardinality :many
+                   :isComponent true}]
+        :journal [{:type :ref
+                   :ref {:ns :journal}
+                   :doc "The journal belonging to the entry"}]}
+```
 
 ## License
 

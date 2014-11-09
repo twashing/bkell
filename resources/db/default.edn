@@ -82,6 +82,7 @@
                        {:name "taxes"
                         :accounts #{}
                         :journals #{}}}}
+
              {:+/db/id [[:group-guest]]
 
               :name "guest"
@@ -89,6 +90,7 @@
               :users #{{:+/db/id [[:user-guest]]
                         :username "guest"
                         :password "default"
+
                         :firstname "guest"
                         :lastname "guest"
                         :email "guest"
