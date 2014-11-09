@@ -25,7 +25,7 @@
    :spittoon {:env env :recreate? true}})
 
 
-(defn setup-db []
+(defn setup-db! []
   (let [schema-bkell (read-string (slurp "resources/db/schema-adi.edn"))
         data-bkell (read-string (slurp "resources/db/default.edn"))
 
@@ -38,25 +38,12 @@
                 :type (gen/elements [:asset :liability :revenue :expense])
                 :counterWeight (gen/elements [:debit :credit])))
 
-#_(fact "add an account"
-      (let [account {:name "foo" :type :asset :counterWeight :debit}
-            group-name "webkell"
-            ds (setup-db)
-
-            result (dm/add-account ds group-name account)]
-
-        (set/subset? #{:counterWeight :name :type}
-                     (-> result first :book :accounts first keys set)) => true
-
-        (-> result nil? not) => true
-        ))
-
 (defspec add-an-account
   10
   (prop/for-all [account (account-generator)]
 
                 (let [group-name "webkell"
-                      ds (setup-db)
+                      ds (setup-db!)
 
                       result (dm/add-account ds group-name account)]
 
@@ -65,19 +52,20 @@
 
                        (-> result nil? not)))))
 
-#_(defspec restrict-duplicate-account
+(defspec restrict-duplicate-account
   10
   (prop/for-all [account (account-generator)]
 
-                (let [ds (-> bkell/system :spittoon :db)
-                      group-name "webkell"
+                (let [group-name "webkell"
+                      ds (setup-db!)
+
                       _ (dm/add-account ds group-name account)
                       result (try+ (dm/add-account ds group-name account)
                                    (catch AssertionError e &throw-context))]
 
-                  (println "1: " result)
+                  (println "1: " (keys result))
 
-                  (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
+                  (= (sort '(:object :message :cause :stack-trace :throwable))
                      (sort (keys result))))))
 
 #_(defspec addaccount-goesto-correctgroup
