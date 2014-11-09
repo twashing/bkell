@@ -1,19 +1,19 @@
 (ns bkell.domain.domain-test
   (:require [midje.sweet :refer :all]
             [midje.repl :repl :all]
-            #_[clojure.test :refer :all]
-            #_[slingshot.slingshot :refer [try+ throw+]]
-            #_[spyscope.core :as spy]
-            #_[slingshot.slingshot :refer [try+ throw+]]
+            [clojure.test :refer :all]
+            [slingshot.slingshot :refer [try+ throw+]]
+            [spyscope.core :as spy]
+            [slingshot.slingshot :refer [try+ throw+]]
 
-            #_[clojure.test.check.clojure-test :refer :all]
-            #_[clojure.test.check.generators :as gen]
-            #_[clojure.test.check.properties :as prop]
+            [clojure.test.check.clojure-test :refer :all]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.properties :as prop]
 
-            #_[bkell.bkell :as bkell]
-            #_[bkell.config :as config]
-            #_[bkell.domain.domain :as dm]
-            #_[bkell.spittoon :as sp]))
+            [bkell.bkell :as bkell]
+            [bkell.config :as config]
+            [bkell.domain.domain :as dm]
+            [bkell.spittoon :as sp]))
 
 (def env (:test (config/load-edn "config.edn")))
 
@@ -29,35 +29,44 @@
 
 
 (defn account-generator []
-  (gen/hash-map :name gen/string
+  (gen/hash-map :name gen/string-ascii
                 :type (gen/elements [:asset :liability :revenue :expense])
-                :counterweight (gen/elements [:debit :credit])))
+                :counterWeight (gen/elements [:debit :credit])))
 
-(defspec foobar
+(defspec add-an-account
   10
-  (prop/for-all [a true]
+  (prop/for-all [account (account-generator)]
 
-                a))
+                (let [ds (-> bkell/system :spittoon :db)
+                      group-name "webkell"
+                      result (dm/add-account ds group-name account)]
 
-#_(defspec add-an-account
+                  (and (-> result nil? not)
+                       (some #{:counterWeight :name :type}
+                             (-> result first :book :accounts first keys sort))))))
+
+#_(defspec add-duplicate-account
   10
-  (prop/for-all [ds (-> bkell/system :spittoon :db)
-                 group-name "webkell"
-                 ;;account (account-generator)
-                 ]
+  (prop/for-all [account (account-generator)]
 
-                (println "1: " ds)
+                (let [ds (-> bkell/system :spittoon :db)
+                      group-name "webkell"]
 
-                #_(dm/add-account ds group-name account)
+                  #spy/p
 
-                #_(= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
-                   (sort (keys (try+ (dm/add-account ds group-name account)
-                                     (catch [:type :duplicate-account] _)))))))
+                  (dm/add-account ds group-name account)
 
+                  (= (sort '(:object :message :cause :stack-trace :wrapper :throwable))
+                     (sort (keys (try+ (dm/add-account ds group-name account)
+                                       (catch [:type :duplicate-error] _))))))))
+
+#_(defspec addaccount-goesto-correctgroup
+    10
+    (prop/for-all [account (account-generator)]))
 
 #_(defspec disallow-duplicate-accounts
-  10
-  (prop/for-all [account (account-generator)]))
+    10
+    (prop/for-all [account (account-generator)]))
 
 
 (comment
