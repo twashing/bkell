@@ -14,7 +14,7 @@
 
             [bkell.bkell :as bkell]
             [bkell.config :as config]
-            [bkell.domain.account :as dm]
+            [bkell.domain.account :as acc]
             [bkell.spittoon :as sp]))
 
 
@@ -45,7 +45,7 @@
                 (let [group-name "webkell"
                       ds (setup-db!)
 
-                      result (dm/add-account ds group-name account)]
+                      result (acc/add-account ds group-name account)]
 
                   (and (set/subset? #{:counterWeight :name :type}
                                     (-> result first :book :accounts first keys set))
@@ -59,8 +59,8 @@
                 (let [group-name "webkell"
                       ds (setup-db!)
 
-                      _ (dm/add-account ds group-name account)
-                      result (try+ (dm/add-account ds group-name account)
+                      _ (acc/add-account ds group-name account)
+                      result (try+ (acc/add-account ds group-name account)
                                    (catch AssertionError e &throw-context))]
 
                   (= (sort '(:object :message :cause :stack-trace :throwable))
@@ -74,7 +74,7 @@
                       group-name-alt "guest"
                       ds (setup-db!)
 
-                      result (dm/add-account ds group-name account)
+                      result (acc/add-account ds group-name account)
 
                       result-check (adi/select ds {:account
                                                    {:name (:name account)
@@ -82,14 +82,48 @@
                                                     {:name "main"
                                                      :group/name group-name-alt}}}
                                                :ids)]
-
                   (empty? result-check))))
 
+(defspec no-duplicate-accounts
+  10
+  (prop/for-all [_ gen/int]
 
+                (let [group-name "webkell"
+                      ds (setup-db!)
+
+                      a1 {:name "one" :type :asset :counterWeight :debit}
+                      a2 {:name "two" :type :asset :counterWeight :debit}
+                      accounts [a1 a2]]
+
+                  (acc/no-duplicate-accounts ds group-name accounts))))
+
+(defspec add-accounts
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (setup-db!)
+
+                      a1 {:name "one" :type :asset :counterWeight :debit}
+                      a2 {:name "two" :type :asset :counterWeight :debit}
+                      accounts [a1 a2]]
+
+                  (acc/add-accounts ds group-name accounts))))
 
 (comment
   (bkell/log-debug!)
   (bkell/log-info!)
   (midje.repl/autotest)
   (midje.repl/load-facts 'bkell.domain.account-test)
+
+  (def group-name "webkell")
+  (def ds (setup-db!))
+
+  (def a1 {:name "one" :type :asset :counterWeight :debit})
+  (def a2 {:name "two" :type :asset :counterWeight :debit})
+  (def accounts [a1 a2])
+
+  (acc/no-duplicate-accounts ds group-name accounts)
+  (acc/add-accounts ds group-name accounts)
+
   )

@@ -14,13 +14,9 @@ If there is an increase or decrease in one account, there will be equal decrease
            | debit | credit
 -----------|-------|-------
 asset      |   +   |   -
------------|-------|-------
 liability  |   -   |   +
------------|-------|-------
 revenue    |   -   |   +
------------|-------|-------
 expense    |   +   |   -
------------|-------|-------
 capital    |   -   |   +
 
 For a more detailed description of double-entry bookkeeping concepts, refer to [Wikipedia](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
@@ -101,6 +97,7 @@ improt 2   |        |  Y  |     |  Y
 
 ## Todo List
 
+- add-account helper that assigns :counterWeight, based on the :type
 - use Maybe Monad to execute component.spittoon/start
 - datomic wrapper (using adi)
   - with nominal CRUD operations
@@ -132,7 +129,7 @@ improt 2   |        |  Y  |     |  Y
   - don't add duplicate accounts (solely within a given group)
 - for function constraints, evaluate typed.clojure vs. schema
 - an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
-
+- replace no-duplicate-accounts with a query using the list
 
 ## License
 
