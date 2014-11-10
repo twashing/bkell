@@ -1,4 +1,4 @@
-(ns bkell.domain.helper
+(ns bkell.domain.test-helper
   (:require [adi.core :as adi]))
 
 

@@ -14,10 +14,13 @@
        (every? true?)))
 
 (defn transform-entry-accounts [ds gname entry]
-  (assoc entry :content (mapv #(assoc %
-                                 :account
-                                 (-> (acc/find-account-by-name ds gname (:account %) [:ids])
-                                     first :db :id))
+  (assoc entry :content (mapv (fn [ech]
+
+                                (let [raccount (acc/find-account-by-name ds gname (:account ech) [:ids])]
+                                  (assoc ech
+                                    :account (-> raccount first :db :id)
+                                    :account-counterweight (-> raccount first :account :counterWeight))))
+
                               (:content entry))))
 
 (defn add-entry [ds group-name entry]

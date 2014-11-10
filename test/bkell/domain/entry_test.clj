@@ -2,7 +2,7 @@
   (:require [midje.sweet :refer :all]
             [midje.repl :repl :all]
             [clojure.test :refer :all]
-            [bkell.domain.helper :as hlp]
+            [bkell.domain.test-helper :as hlp]
             [slingshot.slingshot :refer [try+ throw+]]
             [spyscope.core :as spy]
             [slingshot.slingshot :refer [try+ throw+]]
