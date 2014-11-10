@@ -129,7 +129,8 @@ improt 2   |        |  Y  |     |  Y
   - don't add duplicate accounts (solely within a given group)
 - for function constraints, evaluate typed.clojure vs. schema
 - an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
-- replace no-duplicate-accounts with a query using the list
+- replace `no-duplicate-accounts` with a query using the list
+- can't delete an account with dependent entries
 
 ## License
 

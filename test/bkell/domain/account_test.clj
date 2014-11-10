@@ -2,6 +2,7 @@
   (:require [midje.sweet :refer :all]
             [midje.repl :repl :all]
             [clojure.test :refer :all]
+            [bkell.domain.helper :as hlp]
             [slingshot.slingshot :refer [try+ throw+]]
             [spyscope.core :as spy]
             [slingshot.slingshot :refer [try+ throw+]]
@@ -24,15 +25,6 @@
   {:bkell {}
    :spittoon {:env env :recreate? true}})
 
-
-(defn setup-db! []
-  (let [schema-bkell (read-string (slurp "resources/db/schema-adi.edn"))
-        data-bkell (read-string (slurp "resources/db/default.edn"))
-
-        ds (adi/connect! "datomic:mem://adi-examples-bkell" schema-bkell true true)
-        _ (adi/insert! ds data-bkell)]
-    ds))
-
 (defn account-generator []
   (gen/hash-map :name gen/string-ascii
                 :type (gen/elements [:asset :liability :revenue :expense])
@@ -43,7 +35,7 @@
   (prop/for-all [account (account-generator)]
 
                 (let [group-name "webkell"
-                      ds (setup-db!)
+                      ds (hlp/setup-db!)
 
                       result (acc/add-account ds group-name account)]
 
@@ -57,7 +49,7 @@
   (prop/for-all [account (account-generator)]
 
                 (let [group-name "webkell"
-                      ds (setup-db!)
+                      ds (hlp/setup-db!)
 
                       _ (acc/add-account ds group-name account)
                       result (try+ (acc/add-account ds group-name account)
@@ -72,7 +64,7 @@
 
                 (let [group-name "webkell"
                       group-name-alt "guest"
-                      ds (setup-db!)
+                      ds (hlp/setup-db!)
 
                       result (acc/add-account ds group-name account)
 
@@ -89,7 +81,7 @@
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
-                      ds (setup-db!)
+                      ds (hlp/setup-db!)
 
                       a1 {:name "one" :type :asset :counterWeight :debit}
                       a2 {:name "two" :type :asset :counterWeight :debit}
@@ -102,7 +94,7 @@
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
-                      ds (setup-db!)
+                      ds (hlp/setup-db!)
 
                       a1 {:name "one" :type :asset :counterWeight :debit}
                       a2 {:name "two" :type :asset :counterWeight :debit}
@@ -134,7 +126,7 @@
   (midje.repl/load-facts 'bkell.domain.account-test)
 
   (def group-name "webkell")
-  (def ds (setup-db!))
+  (def ds (hlp/setup-db!))
 
   (def a1 {:name "one" :type :asset :counterWeight :debit})
   (def a2 {:name "two" :type :asset :counterWeight :debit})
