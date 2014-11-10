@@ -131,4 +131,7 @@
   (acc/no-duplicate-accounts ds group-name accounts)
   (acc/add-accounts ds group-name accounts)
 
+  (adi/select ds 17592186045470 :raw)
+  (adi/select ds 17592186045470 :first)
+
   )

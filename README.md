@@ -135,6 +135,7 @@ improt 2   |        |  Y  |     |  Y
 - replace `no-duplicate-accounts` with a query using the list
 - CRUD on book(s) journal(s)
 
+** howto assert that account belongs to group (in: domain.account/find-account-by-id)
 
 ## License
 

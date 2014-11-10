@@ -1,9 +1,10 @@
 (ns bkell.domain.account
   (:require [adi.core :as adi]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [bkell.domain.helper :as hlp]))
 
 
-(declare find-account)
+(declare find-account-by-name)
 
 (defn no-duplicate-account [ds group-name account]
   (let [a (find-account-by-name ds group-name (:name account))]
@@ -54,3 +55,23 @@
                                       :group/name gname}}}]
                                   opts)]
        (apply adi/select select-args))))
+
+
+(defn find-account-by-id [ds gname aid]
+  (:account (hlp/find-by-id ds aid)))
+
+
+(comment
+
+  (acc/find-account-by-id ds "webkell" 123)
+
+
+  (adi/query ds '[:find ?self
+                  :where [?self :account/name "cash"]
+                  [?self :account/book ?e22978]
+                  [?e22978 :book/name "main"]
+                  [?e22978 :book/group ?e22979]
+                  [?e22979 :group/name "webkell"]]
+             [])
+
+)

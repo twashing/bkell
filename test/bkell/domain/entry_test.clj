@@ -23,26 +23,31 @@
 (def env (:test (config/load-edn "config.edn")))
 
 
-(defspec add-entry
+(defn setup-accounts [ds group-name]
+
+  (let [a1 {:name "trade-creditor"
+            :type :expense
+            :counterWeight :debit}
+
+        a2 {:name "electricity"
+            :type :asset
+            :counterWeight :debit}
+
+        a3 {:name "widgets"
+            :type :asset
+            :counterWeight :debit}
+
+        accounts [a1 a2 a3]]
+
+    (acc/add-accounts ds group-name accounts)))
+
+(defspec test-transform-entry-accounts
   10
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-
-                      a1 {:name "trade-creditor"
-                          :type :expense
-                          :counterWeight :debit}
-
-                      a2 {:name "electricity"
-                          :type :asset
-                          :counterWeight :debit}
-
-                      a3 {:name "widgets"
-                          :type :asset
-                          :counterWeight :debit}
-
-                      accounts [a1 a2 a3]
+                      _ (setup-accounts ds group-name)
 
                       entry {:date (java.util.Date.)
                              :content [{:type :credit
@@ -57,7 +62,23 @@
                                         :amount 1600
                                         :account "widgets"}]}
 
-                      _ (acc/add-accounts ds group-name accounts)]
+                      r1 (ent/transform-entry-accounts ds group-name entry)
+
+                      yanked-accounts (->> r1
+                                           :content
+                                           (map #(:account %)))]
+
+                  (and (every? #(not (nil? %)) yanked-accounts)
+                       (every? #(not (nil? %)) (map #(acc/find-account-by-id ds group-name %)
+                                                    yanked-accounts))))))
+
+#_(defspec test-add-entry
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (setup-accounts ds group-name)]
 
                   (ent/add-entry ds group-name entry))))
 
