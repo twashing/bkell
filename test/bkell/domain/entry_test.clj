@@ -23,22 +23,22 @@
 (def env (:test (config/load-edn "config.edn")))
 
 
-#_(defspec add-entry
+(defspec add-entry
   10
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
 
-                      a1 {:account "trade-creditor"
+                      a1 {:name "trade-creditor"
                           :type :expense
                           :counterWeight :debit}
 
-                      a2 {:account "electricity"
+                      a2 {:name "electricity"
                           :type :asset
                           :counterWeight :debit}
 
-                      a3 {:account "widgets"
+                      a3 {:name "widgets"
                           :type :asset
                           :counterWeight :debit}
 
@@ -63,27 +63,7 @@
 
 
 ;; test with "find-corresponding-account-byid"
-
-
-#_(defspec addaccount-goesto-correctgroup
-  10
-  (prop/for-all [account (account-generator)]
-
-                (let [group-name "webkell"
-                      group-name-alt "guest"
-                      ds (hlp/setup-db!)
-
-                      result (acc/add-account ds group-name account)
-
-                      result-check (adi/select ds {:account
-                                                   {:name (:name account)
-                                                    :book
-                                                    {:name "main"
-                                                     :group/name group-name-alt}}}
-                                               :ids)]
-                  (empty? result-check))))
-
-
+;; test that entry gets into the correct group
 
 (comment
   (bkell/log-debug!)
@@ -91,4 +71,69 @@
   (midje.repl/autotest)
   (midje.repl/load-facts 'bkell.domain.entry-test)
 
+  (ns bkell.bkell)
+  (require '[bkell.domain.account :as acc]
+           '[bkell.domain.entry :as ent])
+
+  (def a1 {:name "trade-creditor"
+           :type :expense
+           :counterWeight :debit})
+
+  (def a2 {:name "electricity"
+           :type :asset
+           :counterWeight :debit})
+
+  (def a3 {:name "widgets"
+           :type :asset
+           :counterWeight :debit})
+
+  (def accounts [a1 a2 a3])
+
+  (def entry {:date (java.util.Date.)
+              :content [{:type :credit
+                         :amount 2600
+                         :account "trade-creditor"}
+
+                        {:type :debit
+                         :amount 1000
+                         :account "electricity"}
+
+                        {:type :debit
+                         :amount 1600
+                         :account "widgets"}]})
+
+  (def ds (-> system :spittoon :db))
+  (def group-name "webkell")
+
+  (acc/add-accounts ds group-name accounts)
+
+  (ent/transform-entry-accounts ds group-name entry)
+
+  (def r1 {:date #inst "2014-11-10T20:31:33.635-00:00",
+           :content [{:amount 2600, :type :credit, :account 17592186045471}
+                     {:amount 1000, :type :debit, :account 17592186045469}
+                     {:amount 1600, :type :debit, :account 17592186045470}]})
+
+
+  (def entry2 {:date (java.util.Date.)
+              :content [{:type :credit
+                         :amount 2600
+                         :account "trade-creditor"}
+
+                        {:type :debit
+                         :amount 1000
+                         :account "electricity"}
+
+                        {:type :debit
+                         :amount 1600
+                         :account "Zzz"}]})
+
+  (ent/transform-entry-accounts ds group-name entry2)
+
+  (def r2 {:date #inst "2014-11-10T20:38:29.774-00:00",
+           :content [{:amount 2600, :type :credit, :account 17592186045471}
+                     {:amount 1000, :type :debit, :account 17592186045469}
+                     {:amount 1600, :type :debit, :account nil}]})
+
+  (ent/corresponding-accounts-exist? r2)
   )
