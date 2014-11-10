@@ -22,12 +22,8 @@
 
 (def env (:test (config/load-edn "config.edn")))
 
-(defn gen-test-config []
-  {:bkell {}
-   :spittoon {:env env :recreate? true}})
 
-
-(defspec add-entry
+#_(defspec add-entry
   10
   (prop/for-all [_ gen/int]
 
@@ -93,16 +89,6 @@
   (bkell/log-debug!)
   (bkell/log-info!)
   (midje.repl/autotest)
-  (midje.repl/load-facts 'bkell.domain.account-test)
-
-  (def group-name "webkell")
-  (def ds (hlp/setup-db!))
-
-  (def a1 {:name "one" :type :asset :counterWeight :debit})
-  (def a2 {:name "two" :type :asset :counterWeight :debit})
-  (def accounts [a1 a2])
-
-  (acc/no-duplicate-accounts ds group-name accounts)
-  (acc/add-accounts ds group-name accounts)
+  (midje.repl/load-facts 'bkell.domain.entry-test)
 
   )

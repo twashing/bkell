@@ -55,13 +55,15 @@ These are the core entities in the system. The main business transactions are ad
     - can only have 1 owner 
     - can have many users
     - can have many books 
+    - can't delete a group. instead delete its owner
 
   - **User**
     - belongs to at least 1 group 
     - can belong to many groups 
     - must own at least one group 
     - cannot update fields of another user
-
+    - deleting a user also deletes the owned group (& bookkeeping data)
+    
   - **Book**
     - 1 book can have many accounts 
     - 1 book should have only 1 journal 
@@ -70,11 +72,12 @@ These are the core entities in the system. The main business transactions are ad
   - **Journal**
     - each journal can have many entries 
     - only a group's users (incl. owner) can CRUD this data
-
+    
   - **Account**
     - account addition or updates do not bleed into another group's accounts
     - no duplicates
     - only a group's users (incl. owner) can CRUD this data
+    - can't delete an account with dependent entries
 
   - **Entry**
     - each entry must be balanced 
@@ -97,21 +100,20 @@ improt 2   |        |  Y  |     |  Y
 
 ## Todo List
 
+- separate import data function (we need insert-in, then we can constrain the data being inserted)
+- import default data on start (:test)
+  - import users (under :users), if you are the group owner
+  - import accounts, journals, and journal entries (under :books), if your user is a member of the group
+- separate export data function
+- change password on user creation
 - add-account helper that assigns :counterWeight, based on the :type
+
 - use Maybe Monad to execute component.spittoon/start
 - datomic wrapper (using adi)
   - with nominal CRUD operations
   - with {create,retrieve,update,delete}-in, constraining the data's context
   - the abouve data structure constraints must be maintained when manipulating entites in the system.
   - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
-
-- separate import data function (we need insert-in, then we can constrain the data being inserted)
-- import default data on start (:test)
-  - import users (under :users), if you are the group owner
-  - import accounts, journals, and journal entries (under :books), if your user is a member of the group
-
-- change password on user creation
-- separate export data function
 - login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
 - runnable scripts ; include code examples for adding account(s) and entries 
 - don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
@@ -127,10 +129,12 @@ improt 2   |        |  Y  |     |  Y
 ```
 - put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
   - don't add duplicate accounts (solely within a given group)
+
 - for function constraints, evaluate typed.clojure vs. schema
 - an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
 - replace `no-duplicate-accounts` with a query using the list
-- can't delete an account with dependent entries
+- CRUD on book(s) journal(s)
+
 
 ## License
 

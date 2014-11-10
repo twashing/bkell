@@ -1,6 +1,7 @@
 (ns bkell.domain.helper
   (:require [adi.core :as adi]))
 
+
 (defn setup-db! []
   (let [schema-bkell (read-string (slurp "resources/db/schema-adi.edn"))
         data-bkell (read-string (slurp "resources/db/default.edn"))

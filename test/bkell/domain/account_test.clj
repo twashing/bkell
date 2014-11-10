@@ -21,10 +21,6 @@
 
 (def env (:test (config/load-edn "config.edn")))
 
-(defn gen-test-config []
-  {:bkell {}
-   :spittoon {:env env :recreate? true}})
-
 (defn account-generator []
   (gen/hash-map :name gen/string-ascii
                 :type (gen/elements [:asset :liability :revenue :expense])

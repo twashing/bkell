@@ -20,7 +20,7 @@
 
   ;; TODO - transform :account to a ref, in entry content (http://docs.caudate.me/adi/#pointers) ... return new structure
   ;; TODO - assert entry balanced, then... update
-  (adi/update! ds
+  #_(adi/update! ds
                {:journal
                 {:name "generalledger"
                  :book
