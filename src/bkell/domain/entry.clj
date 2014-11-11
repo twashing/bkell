@@ -70,3 +70,20 @@
                {:journal/entries entry-final})
         (throw+ {:type :unbalanced-entry}))
       (throw+ {:type :non-existant-accounts}))))
+
+
+;; TODO - try #{'(.before #inst "0000-0000") '(.after #"00000-000001")}
+(defn find-entry-before [ds gname date] )
+(defn find-entry-after [ds gname date] )
+(defn find-entry-between [ds gname before after] )
+
+(defn list-entries [ds gname]
+  (let [result (adi/select ds {:journal
+                               {:entries '_
+                                :name "generalledger"
+                                :book
+                                {:name "main"
+                                 :group/name gname}}}
+                           :return {:journal {:entries {:content :checked}}})]
+
+    (-> result first :journal :entries)))

@@ -6,20 +6,20 @@
 
 (declare find-account-by-name)
 
-(defn no-duplicate-account [ds group-name account]
+(defn no-duplicate-account? [ds group-name account]
   (let [a (find-account-by-name ds group-name (:name account))]
     (empty? a)))
 
-(defn no-duplicate-accounts [ds group-name accounts]
+(defn no-duplicate-accounts? [ds group-name accounts]
   (let [results (reduce (fn [rslt ech]
-                          (conj rslt (no-duplicate-account ds group-name ech)))
+                          (conj rslt (no-duplicate-account? ds group-name ech)))
                         []
                         accounts)]
 
     (every? true? results)))
 
 (defn add-account [ds group-name account]
-  {:pre [(no-duplicate-account ds group-name account)]}
+  {:pre [(no-duplicate-account? ds group-name account)]}
 
   (adi/update! ds
                {:book
@@ -28,7 +28,7 @@
                {:book/accounts account}))
 
 (defn add-accounts [ds group-name accounts]
-  {:pre [(no-duplicate-accounts ds group-name accounts)
+  {:pre [(no-duplicate-accounts? ds group-name accounts)
          (or (vector? accounts)
              (list? accounts))]}
 

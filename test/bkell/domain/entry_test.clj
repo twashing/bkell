@@ -99,6 +99,8 @@
 ;; TODO - test unbalanced
 ;; TODO - test non-existant accounts
 ;; TODO - a bigger entry example
+;; TODO - test with "find-corresponding-account-byid"
+;; TODO - test that entry gets into the correct group
 
 (defspec test-add-entry
   10
@@ -124,9 +126,36 @@
                   (= '(:db :journal)
                      (sort (keys (first (ent/add-entry ds group-name entry))))))))
 
+#_(defspec test-list-entry
+  10
+  (prop/for-all [_ gen/int]
 
-;; test with "find-corresponding-account-byid"
-;; test that entry gets into the correct group
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (setup-accounts ds group-name)
+
+                      edate  (java.util.Date.)
+                      entry {:date edate
+                             :content [{:type :credit
+                                        :amount 2600
+                                        :account "trade-creditor"}
+
+                                       {:type :debit
+                                        :amount 1000
+                                        :account "electricity"}
+
+                                       {:type :debit
+                                        :amount 1600
+                                        :account "widgets"}]}
+
+                      result (ent/list-entries ds group-name)]
+
+                  (= result
+                     #{{:content #{{:type :credit, :amount 2600.0}
+                                   {:type :debit, :amount 1600.0}
+                                   {:type :debit, :amount 1000.0}},
+                        :date edate}}))))
+
 
 (comment
   (bkell/log-debug!)
@@ -136,7 +165,8 @@
 
   (ns bkell.bkell)
   (require '[bkell.domain.account :as acc]
-           '[bkell.domain.entry :as ent])
+           '[bkell.domain.entry :as ent]
+           '[bkell.domain.test-helper :as hlp])
 
   (def a1 {:name "trade-creditor"
            :type :expense
@@ -178,7 +208,7 @@
                          :amount 1600
                          :account "Zzz"}]})
 
-  (def ds (-> system :spittoon :db))
+  (def ds (hlp/setup-db!))
   (def group-name "webkell")
 
   (acc/add-accounts ds group-name accounts)
@@ -202,5 +232,52 @@
   (ent/entry-balanced? ds group-name entry-transformed)
 
   (ent/add-entry ds group-name entry)
+
+  (ent/list-entries ds group-name)
+
+  (adi/select ds {:journal/entries '_} :ids)
+
+  #{{:db {:id 17592186045466}, :journal {:name "generalledger"}}}
+  #{{:journal {:name "generalledger"}}}
+
+
+  (adi/select ds {:journal
+                  {:entries '_
+                   :name "generalledger"
+                   :book
+                   {:name "main"
+                    :group/name group-name}}}
+              ;;:ids
+              :return {:journal {:entries {:content :checked}}})
+
+
+  (def z3 #{{:journal {:entries #{{:content #{{:type :credit,
+                                                :amount 2600.0}
+                                               {:type :debit,
+                                                :amount 1600.0}
+                                               {:type :debit,
+                                                :amount 1000.0}},
+                                    :date #inst "2014-11-11T01:07:52.113-00:00"}},
+                        :name "generalledger"}}})
+
+
+  (def z2 #{{:db {:id 17592186045466},
+              :journal {:entries #{{:+ {:db {:id 17592186045473}},
+                                    :content #{{:+ {:db {:id 17592186045474}},
+                                                :type :debit,
+                                                :amount 1000.0}
+                                               {:+ {:db {:id 17592186045475}},
+                                                :type :debit,
+                                                :amount 1600.0}
+                                               {:+ {:db {:id 17592186045476}},
+                                                :type :credit, :amount 2600.0}},
+                                    :date #inst "2014-11-11T01:07:52.113-00:00" },
+                                   :name "generalledger"}}}})
+
+
+  (def z1 #{{:db {:id 17592186045466},
+             :journal {:entries #{{:+ {:db {:id 17592186045473}},
+                                   :date #inst "2014-11-11T01:07:52.113-00:00"}},
+                       :name "generalledger"}}})
 
   )

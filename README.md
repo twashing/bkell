@@ -137,7 +137,13 @@ improt 2   |        |  Y  |     |  Y
 - make better generators for functions in domain/{account.clj,entry.clj}
 - ensure that :account-counterweight is in the input structure of entry-balanced?
 
-** howto assert that account belongs to group (in: domain.account/find-account-by-id)
+- (entry) test unbalanced
+- (entry) test non-existant accounts
+- (entry) a bigger entry example
+- (entry) test with "find-corresponding-account-byid"
+- (entry) test that entry gets into the correct group
+
+- ** howto assert that account belongs to group (in: domain.account/find-account-by-id)
 
 ## License
 

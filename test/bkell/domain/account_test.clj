@@ -4,7 +4,6 @@
             [clojure.test :refer :all]
             [bkell.domain.test-helper :as hlp]
             [slingshot.slingshot :refer [try+ throw+]]
-            [slingshot.slingshot :refer [try+ throw+]]
             [adi.core :as adi]
             [clojure.set :as set]
 
@@ -17,8 +16,6 @@
             [bkell.domain.account :as acc]
             [bkell.spittoon :as sp]))
 
-
-(def env (:test (config/load-edn "config.edn")))
 
 (defn account-generator []
   (gen/hash-map :name gen/string-ascii
@@ -82,7 +79,7 @@
                       a2 {:name "two" :type :asset :counterWeight :debit}
                       accounts [a1 a2]]
 
-                  (acc/no-duplicate-accounts ds group-name accounts))))
+                  (acc/no-duplicate-accounts? ds group-name accounts))))
 
 (defspec add-accounts
   10
