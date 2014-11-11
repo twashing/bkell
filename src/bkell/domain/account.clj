@@ -60,11 +60,16 @@
 (defn find-account-by-id [ds gname aid]
   (:account (hlp/find-by-id ds aid)))
 
+(defn list-accounts [ds gname]
+  (adi/select ds {:account
+                  {:book
+                   {:name "main"
+                    :group/name gname}}}))
+
 
 (comment
 
   (acc/find-account-by-id ds "webkell" 123)
-
 
   (adi/query ds '[:find ?self
                   :where [?self :account/name "cash"]

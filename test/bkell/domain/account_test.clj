@@ -22,7 +22,7 @@
                 :type (gen/elements [:asset :liability :revenue :expense])
                 :counterWeight (gen/elements [:debit :credit])))
 
-(defspec add-an-account
+(defspec test-add-an-account
   10
   (prop/for-all [account (account-generator)]
 
@@ -36,7 +36,7 @@
 
                        (-> result nil? not)))))
 
-(defspec restrict-duplicate-account
+(defspec test-restrict-duplicate-account
   10
   (prop/for-all [account (account-generator)]
 
@@ -50,7 +50,7 @@
                   (= (sort '(:object :message :cause :stack-trace :throwable))
                      (sort (keys result))))))
 
-(defspec addaccount-goesto-correctgroup
+(defspec test-addaccount-goesto-correctgroup
   10
   (prop/for-all [account (account-generator)]
 
@@ -68,7 +68,7 @@
                                                :ids)]
                   (empty? result-check))))
 
-(defspec no-duplicate-accounts
+(defspec test-no-duplicate-accounts
   10
   (prop/for-all [_ gen/int]
 
@@ -81,7 +81,7 @@
 
                   (acc/no-duplicate-accounts? ds group-name accounts))))
 
-(defspec add-accounts
+(defspec test-add-accounts
   10
   (prop/for-all [_ gen/int]
 
@@ -111,6 +111,22 @@
                     (and (-> r1 empty? not)
                          (-> r2 empty? not))))))
 
+(defspec test-list-accounts
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+
+                      result (acc/list-accounts ds group-name)]
+
+                  (= result
+                     #{{:account {:name "expense", :type :expense, :counterWeight :debit}}
+                       {:account {:name "revenue", :type :revenue, :counterWeight :credit}}
+                       {:account {:name "debt", :type :liability, :counterWeight :credit}}
+                       {:account {:name "cash", :type :asset, :counterWeight :debit}}}))))
+
+
 (comment
   (bkell/log-debug!)
   (bkell/log-info!)
@@ -129,5 +145,12 @@
 
   (adi/select ds 17592186045470 :raw)
   (adi/select ds 17592186045470 :first)
+
+  (acc/list-accounts ds group-name)
+
+  (def r1 #{{:account {:name "expense", :type :expense, :counterWeight :debit}}
+            {:account {:name "revenue", :type :revenue, :counterWeight :credit}}
+            {:account {:name "debt", :type :liability, :counterWeight :credit}}
+            {:account {:name "cash", :type :asset, :counterWeight :debit}}})
 
   )
