@@ -75,7 +75,6 @@
   10
   (prop/for-all [_ gen/int]
 
-
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
                       _ (setup-accounts ds group-name)
@@ -97,15 +96,33 @@
 
                   (ent/entry-balanced? ds group-name entry-transformed))))
 
-#_(defspec test-add-entry
+;; TODO - test unbalanced
+;; TODO - test non-existant accounts
+;; TODO - a bigger entry example
+
+(defspec test-add-entry
   10
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (setup-accounts ds group-name)]
+                      _ (setup-accounts ds group-name)
 
-                  (ent/add-entry ds group-name entry))))
+                      entry {:date (java.util.Date.)
+                             :content [{:type :credit
+                                        :amount 2600
+                                        :account "trade-creditor"}
+
+                                       {:type :debit
+                                        :amount 1000
+                                        :account "electricity"}
+
+                                       {:type :debit
+                                        :amount 1600
+                                        :account "widgets"}]}]
+
+                  (= '(:db :journal)
+                     (sort (keys (first (ent/add-entry ds group-name entry))))))))
 
 
 ;; test with "find-corresponding-account-byid"
@@ -183,5 +200,7 @@
   (ent/corresponding-accounts-exist? r2)
 
   (ent/entry-balanced? ds group-name entry-transformed)
+
+  (ent/add-entry ds group-name entry)
 
   )

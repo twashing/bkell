@@ -44,14 +44,20 @@
 
                               (:content entry))))
 
+(defn strip-account-counterweight [entry]
+  (assoc entry :content (mapv (fn [ech]
+                                (dissoc ech :account-counterweight))
+                              (:content entry))))
+
 (defn add-entry [ds group-name entry]
   {:pre [(not (nil? group-name))
          (not (nil? entry))
-         (not (clojure.string/blank? (:date entry)))]}
+         (not (nil? (:date entry)))]}
 
   (let [entry-transformed (transform-entry-accounts ds group-name entry)
-        check-accounts-exist? (corresponding-accounts-exist? ds group-name entry-transformed)
-        check-entry-balanced? (entry-balanced? ds group-name entry-transformed)]
+        check-accounts-exist? (corresponding-accounts-exist? entry-transformed)
+        check-entry-balanced? (entry-balanced? ds group-name entry-transformed)
+        entry-final (strip-account-counterweight entry-transformed)]
 
     (if check-accounts-exist?
       (if check-entry-balanced?
@@ -61,6 +67,6 @@
                  :book
                  {:name "main"
                   :group/name group-name}}}
-               {:journal/entries entry})
+               {:journal/entries entry-final})
         (throw+ {:type :unbalanced-entry}))
       (throw+ {:type :non-existant-accounts}))))
