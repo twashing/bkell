@@ -5,7 +5,28 @@
 
 
 (defn entry-balanced? [ds group-name entry]
-  true)
+  (let [result (reduce (fn [rslt ech]
+
+                         (let [ac-weight (:account-counterweight ech)
+                               se-weight (:type ech)]
+
+                           (if (or (and (= :debit ac-weight)
+                                        (= :debit se-weight))
+                                   (and (= :credit ac-weight)
+                                        (= :credit se-weight)))
+
+                             ;; increase :lhs if debit(ing) a debit account OR credit(ing) a credit account
+                             (merge rslt {:lhs
+                                       (+ (:lhs rslt)
+                                          (:amount ech))})
+
+                             (merge rslt {:rhs
+                                       (+ (:rhs rslt)
+                                          (:amount ech))}))))
+                       {:lhs 0.0 :rhs 0.0}   ;; beginning tally
+                       (:content entry))]
+
+    (= (:lhs result) (:rhs result))))
 
 (defn corresponding-accounts-exist? [entry]
   (->> entry
@@ -42,6 +63,4 @@
                   :group/name group-name}}}
                {:journal/entries entry})
         (throw+ {:type :unbalanced-entry}))
-      (throw+ {:type :non-existant-accounts})))
-
-)
+      (throw+ {:type :non-existant-accounts}))))

@@ -4,7 +4,6 @@
             [clojure.test :refer :all]
             [bkell.domain.test-helper :as hlp]
             [slingshot.slingshot :refer [try+ throw+]]
-            [spyscope.core :as spy]
             [slingshot.slingshot :refer [try+ throw+]]
             [adi.core :as adi]
             [clojure.set :as set]
@@ -72,6 +71,32 @@
                        (every? #(not (nil? %)) (map #(acc/find-account-by-id ds group-name %)
                                                     yanked-accounts))))))
 
+(defspec test-entry-balanced
+  10
+  (prop/for-all [_ gen/int]
+
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (setup-accounts ds group-name)
+
+                      entry {:date (java.util.Date.)
+                             :content [{:type :credit
+                                        :amount 2600
+                                        :account "trade-creditor"}
+
+                                       {:type :debit
+                                        :amount 1000
+                                        :account "electricity"}
+
+                                       {:type :debit
+                                        :amount 1600
+                                        :account "widgets"}]}
+
+                      entry-transformed (ent/transform-entry-accounts ds group-name entry)]
+
+                  (ent/entry-balanced? ds group-name entry-transformed))))
+
 #_(defspec test-add-entry
   10
   (prop/for-all [_ gen/int]
@@ -123,19 +148,6 @@
                          :amount 1600
                          :account "widgets"}]})
 
-  (def ds (-> system :spittoon :db))
-  (def group-name "webkell")
-
-  (acc/add-accounts ds group-name accounts)
-
-  (ent/transform-entry-accounts ds group-name entry)
-
-  (def r1 {:date #inst "2014-11-10T20:31:33.635-00:00",
-           :content [{:amount 2600, :type :credit, :account 17592186045471}
-                     {:amount 1000, :type :debit, :account 17592186045469}
-                     {:amount 1600, :type :debit, :account 17592186045470}]})
-
-
   (def entry2 {:date (java.util.Date.)
               :content [{:type :credit
                          :amount 2600
@@ -149,6 +161,18 @@
                          :amount 1600
                          :account "Zzz"}]})
 
+  (def ds (-> system :spittoon :db))
+  (def group-name "webkell")
+
+  (acc/add-accounts ds group-name accounts)
+
+  (def entry-transformed (ent/transform-entry-accounts ds group-name entry))
+
+  (def r1 {:date #inst "2014-11-10T20:31:33.635-00:00",
+           :content [{:amount 2600, :type :credit, :account 17592186045471}
+                     {:amount 1000, :type :debit, :account 17592186045469}
+                     {:amount 1600, :type :debit, :account 17592186045470}]})
+
   (ent/transform-entry-accounts ds group-name entry2)
 
   (def r2 {:date #inst "2014-11-10T20:38:29.774-00:00",
@@ -157,4 +181,7 @@
                      {:amount 1600, :type :debit, :account nil}]})
 
   (ent/corresponding-accounts-exist? r2)
+
+  (ent/entry-balanced? ds group-name entry-transformed)
+
   )

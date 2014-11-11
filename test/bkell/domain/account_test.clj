@@ -4,7 +4,6 @@
             [clojure.test :refer :all]
             [bkell.domain.test-helper :as hlp]
             [slingshot.slingshot :refer [try+ throw+]]
-            [spyscope.core :as spy]
             [slingshot.slingshot :refer [try+ throw+]]
             [adi.core :as adi]
             [clojure.set :as set]

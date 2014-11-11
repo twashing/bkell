@@ -134,6 +134,8 @@ improt 2   |        |  Y  |     |  Y
 - an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
 - replace `no-duplicate-accounts` with a query using the list
 - CRUD on book(s) journal(s)
+- make better generators for functions in domain/{account.clj,entry.clj}
+- ensure that :account-counterweight is in the input structure of entry-balanced?
 
 ** howto assert that account belongs to group (in: domain.account/find-account-by-id)
 
