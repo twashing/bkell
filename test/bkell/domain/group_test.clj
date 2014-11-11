@@ -1,5 +1,6 @@
 (ns bkell.domain.group-test
   (:require [bkell.domain.group :as gp]
+            [bkell.domain.user :as us]
             [midje.sweet :refer :all]
             [midje.repl :repl :all]
             [clojure.test :refer :all]
@@ -79,7 +80,7 @@
                     (and (= (sort '(:+ :name :users :owner :defaultCurrency :books))
                             (-> a first :system :groups first keys sort))
 
-                         (not (empty? (gp/find-user-by-name ds "user-one"))))))))
+                         (not (empty? (us/find-user-by-name ds "user-one"))))))))
 
 (comment
 
