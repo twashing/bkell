@@ -96,12 +96,6 @@
 
                   (ent/entry-balanced? ds group-name entry-transformed))))
 
-;; TODO - test unbalanced
-;; TODO - test non-existant accounts
-;; TODO - a bigger entry example
-;; TODO - test with "find-corresponding-account-byid"
-;; TODO - test that entry gets into the correct group
-
 (defspec test-add-entry
   10
   (prop/for-all [_ gen/int]
@@ -126,7 +120,7 @@
                   (= '(:db :journal)
                      (sort (keys (first (ent/add-entry ds group-name entry))))))))
 
-#_(defspec test-list-entry
+(defspec test-list-entry
   10
   (prop/for-all [_ gen/int]
 
@@ -147,14 +141,21 @@
                                        {:type :debit
                                         :amount 1600
                                         :account "widgets"}]}
+                      _ (ent/add-entry ds group-name entry)
 
                       result (ent/list-entries ds group-name)]
 
-                  (= result
-                     #{{:content #{{:type :credit, :amount 2600.0}
-                                   {:type :debit, :amount 1600.0}
-                                   {:type :debit, :amount 1000.0}},
-                        :date edate}}))))
+
+
+                  (and (= 1 (count result))
+
+                       (= '(:content :date)
+                          (sort (keys (first result))))
+
+                       (= (sort-by :type (-> result first :content))
+                          (sort-by :type #{{:type :credit, :amount 2600.0}
+                                           {:type :debit, :amount 1600.0}
+                                           {:type :debit, :amount 1000.0}}))))))
 
 
 (comment
