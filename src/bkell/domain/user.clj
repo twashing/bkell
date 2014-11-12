@@ -2,10 +2,10 @@
   (:require [adi.core :as adi]
             [bkell.domain.helper :as hlp]))
 
-(declare find-user-by-name)
+(declare find-user-by-username)
 
 (defn no-duplicate-user? [ds uname]
-  (let [a (find-user-by-name ds uname)]
+  (let [a (find-user-by-username ds uname)]
     (empty? a)))
 
 (defn generate-nominal-group [ds uname country currency]
@@ -20,7 +20,7 @@
                  {:system {:groups '_}}
                  {:system {:groups generated-group}})))
 
-(defn find-user-by-name [ds uname]
+(defn find-user-by-username [ds uname]
   (adi/select ds {:user {:username uname}}))
 
 (defn list-users [ds gname]

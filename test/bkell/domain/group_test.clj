@@ -80,7 +80,7 @@
                     (and (= (sort '(:+ :name :users :owner :defaultCurrency :books))
                             (-> a first :system :groups first keys sort))
 
-                         (not (empty? (us/find-user-by-name ds "user-one"))))))))
+                         (not (empty? (us/find-user-by-username ds "user-one"))))))))
 
 (defspec test-list-groups
   10
@@ -100,7 +100,5 @@
   (bkell/log-info!)
   (midje.repl/autotest)
   (midje.repl/load-facts 'bkell.domain.group-test)
-
-
 
   )
