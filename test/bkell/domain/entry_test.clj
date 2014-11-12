@@ -145,8 +145,6 @@
 
                       result (ent/list-entries ds group-name)]
 
-
-
                   (and (= 1 (count result))
 
                        (= '(:content :date)

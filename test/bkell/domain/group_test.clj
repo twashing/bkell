@@ -82,11 +82,25 @@
 
                          (not (empty? (us/find-user-by-name ds "user-one"))))))))
 
+(defspec test-list-groups
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [ds (hlp/setup-db!)
+                      result (gp/list-groups ds)]
+
+                  (and (= 2 (count result))
+
+                       (= result #{{:name "guest"} {:name "webkell"}})))))
+
+
 (comment
 
   (bkell/log-debug!)
   (bkell/log-info!)
   (midje.repl/autotest)
   (midje.repl/load-facts 'bkell.domain.group-test)
+
+
 
   )

@@ -24,3 +24,7 @@
 
 (defn find-group-by-name [ds gname]
   (adi/select ds {:group {:name gname}}))
+
+(defn list-groups [ds]
+  (-> (adi/select ds {:system {:groups '_}} :return {:system {:groups :checked}})
+      first :system :groups))
