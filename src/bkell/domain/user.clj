@@ -22,3 +22,11 @@
 
 (defn find-user-by-name [ds uname]
   (adi/select ds {:user {:username uname}}))
+
+(defn list-users [ds gname]
+  (adi/select ds
+              {:user
+               {:username '_
+                :groups
+                {:name gname}}}
+              :return {:user :checked}))
