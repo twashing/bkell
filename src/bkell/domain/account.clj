@@ -4,7 +4,8 @@
             [bkell.domain.helper :as hlp]))
 
 
-(declare find-account-by-name)
+(declare find-account-by-name
+         add-account)
 
 (defn no-duplicate-account? [ds group-name account]
   (let [a (find-account-by-name ds group-name (:name account))]
@@ -17,6 +18,20 @@
                         accounts)]
 
     (every? true? results)))
+
+(def account-type-mappings {:expense :debit
+                            :revenue :credit
+                            :liability :credit
+                            :asset :debit
+                            :capital :credit})
+
+(defn create-account [ds group-name aname atype]
+  {:pre [(some #{atype} (keys account-type-mappings))]}
+
+  (let [account {:name aname
+                 :type atype
+                 :counterWeight (atype account-type-mappings)}]
+    (add-account ds group-name account)))
 
 (defn add-account [ds group-name account]
   {:pre [(no-duplicate-account? ds group-name account)]}
@@ -65,6 +80,14 @@
                   {:book
                    {:name "main"
                     :group/name gname}}}))
+
+
+(defn update-account [ds id account]
+
+  ;; can only update if no other entries point to it
+  ;; can only update :name or :type (:counterWeight is automatically changed)
+
+  )
 
 
 (comment

@@ -3,8 +3,16 @@
             [clojure.set :as set]
             [slingshot.slingshot :refer [try+ throw+]]))
 
-(defn find-by-id [ds id]
-  (adi/select ds id :first))
+(defn find-core [args]
+  (apply adi/select args))
+
+(defn find-by-id
+  ([ds id] (find-by-id ds id [:first]))
+  ([ds id opts]
+     (let [args [ds id]
+           argsF (set/union args opts)]
+
+       (find-core argsF))))
 
 (defn find-country-by-code
   ([ds code]
@@ -14,7 +22,7 @@
      (let [args [ds {:country {:id code}}]
            argsF (set/union args opts)]
 
-       (apply adi/select argsF))))
+       (find-core argsF))))
 
 (defn find-currency-by-code
   ([ds code]
@@ -24,7 +32,7 @@
      (let [args [ds {:currency {:id code}}]
            argsF (set/union args opts)]
 
-       (apply adi/select argsF))))
+       (find-core argsF))))
 
 (defn generate-nominal-group [ds gname uname country currency]
 

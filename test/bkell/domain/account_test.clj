@@ -19,10 +19,10 @@
 
 (defn account-generator []
   (gen/hash-map :name gen/string-ascii
-                :type (gen/elements [:asset :liability :revenue :expense])
+                :type (gen/elements [:asset :liability :revenue :expense :capital])
                 :counterWeight (gen/elements [:debit :credit])))
 
-(defspec test-add-an-account
+(defspec test-add-account
   10
   (prop/for-all [account (account-generator)]
 
@@ -35,6 +35,38 @@
                                     (-> result first :book :accounts first keys set))
 
                        (-> result nil? not)))))
+
+(defspec test-create-account
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+
+                      aname "fubar"
+                      atype :asset
+                      result (acc/create-account ds group-name aname atype)]
+
+                  (and (set/subset? #{:counterWeight :name :type}
+                                    (-> result first :book :accounts first keys set))
+
+                       (-> result nil? not)))))
+
+(defspec test-create-account-bad-type
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+
+                      aname "fubar"
+                      atype :fubar
+                      result (try+ (acc/create-account ds group-name aname atype)
+                                   (catch AssertionError e &throw-context))]
+
+                  (= '(:cause :message :object :stack-trace :throwable)
+                     (sort (keys result))))))
+
 
 (defspec test-restrict-duplicate-account
   10
