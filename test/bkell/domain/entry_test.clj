@@ -22,31 +22,13 @@
 (def env (:test (config/load-edn "config.edn")))
 
 
-(defn setup-accounts [ds group-name]
-
-  (let [a1 {:name "trade-creditor"
-            :type :expense
-            :counterWeight :debit}
-
-        a2 {:name "electricity"
-            :type :asset
-            :counterWeight :debit}
-
-        a3 {:name "widgets"
-            :type :asset
-            :counterWeight :debit}
-
-        accounts [a1 a2 a3]]
-
-    (acc/add-accounts ds group-name accounts)))
-
 (defspec test-transform-entry-accounts
   10
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (setup-accounts ds group-name)
+                      _ (hlp/setup-accounts ds group-name)
 
                       entry {:date (java.util.Date.)
                              :content [{:type :credit
@@ -77,7 +59,7 @@
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (setup-accounts ds group-name)
+                      _ (hlp/setup-accounts ds group-name)
 
                       entry {:date (java.util.Date.)
                              :content [{:type :credit
@@ -102,7 +84,7 @@
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (setup-accounts ds group-name)
+                      _ (hlp/setup-accounts ds group-name)
 
                       entry {:date (java.util.Date.)
                              :content [{:type :credit
@@ -126,7 +108,7 @@
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (setup-accounts ds group-name)
+                      _ (hlp/setup-accounts ds group-name)
 
                       edate  (java.util.Date.)
                       entry {:date edate

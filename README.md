@@ -143,6 +143,8 @@ improt 2   |        |  Y  |     |  Y
 - (entry) test with "find-corresponding-account-byid"
 - (entry) test that entry gets into the correct group
 
+- on add-account, assert that :type has the correct corresponding :counterWeight
+-- currently only operating on the `main` books; open this up to operate on any book
 - ** howto assert that account belongs to group (in: domain.account/find-account-by-id)
 
 ## License

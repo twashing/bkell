@@ -67,7 +67,6 @@
                   (= '(:cause :message :object :stack-trace :throwable)
                      (sort (keys result))))))
 
-
 (defspec test-restrict-duplicate-account
   10
   (prop/for-all [account (account-generator)]
@@ -157,6 +156,74 @@
                        {:account {:name "revenue", :type :revenue, :counterWeight :credit}}
                        {:account {:name "debt", :type :liability, :counterWeight :credit}}
                        {:account {:name "cash", :type :asset, :counterWeight :debit}}}))))
+
+(defspec test-does-account-have-connected-entries?
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+                      _ (hlp/add-test-entry ds group-name)
+
+                      aname "electricity"
+                      new-account {:name "trade-creditor2"
+                                   :type :expense
+                                   :counterWeight :debit}
+
+                      r1 (acc/does-account-have-connected-entries? ds group-name aname)
+                      r2 (acc/does-account-have-connected-entries? ds group-name "cash")]
+
+                  (and r1
+                       (not r2)))))
+
+(defspec test-update-account-with-connected-entry
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+                      _ (hlp/add-test-entry ds group-name)
+
+                      aname "electricity"
+                      newa-good {:name "electricity2"}
+
+                      newa-bad {:name "electricity"
+                                :type :liability
+                                :counterWeight :credit}
+
+                      rgood (try+ (acc/update-account ds group-name aname newa-good)
+                                  (catch AssertionError e &throw-context))
+
+                      #_rbad #_(try+ (acc/update-account ds group-name aname newa-bad)
+                                  (catch AssertionError e &throw-context))]
+
+                  (and (-> rgood vector?)
+                       (=  '(:account :db)
+                           (-> rgood first keys sort))))))
+
+#_(defspec test-update-account-without-connected-entry
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+                      _ (hlp/add-test-entry ds group-name)
+
+                      aname "electricity"
+                      new-account {:name "trade-creditor2"
+                                   :type :expense
+                                   :counterWeight :debit}
+
+                      r1 (acc/does-account-have-connected-entries? ds group-name aname)
+                      r2 (acc/does-account-have-connected-entries? ds group-name "cash")
+                      ;;_ (acc/update-account ds group-name aid new-account)
+                      ]
+
+                  (and r1
+                       (not r2)))))
 
 
 (comment

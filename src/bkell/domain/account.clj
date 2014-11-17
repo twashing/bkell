@@ -1,6 +1,7 @@
 (ns bkell.domain.account
   (:require [adi.core :as adi]
             [clojure.set :as set]
+            [slingshot.slingshot :refer [try+ throw+]]
             [bkell.domain.helper :as hlp]))
 
 
@@ -81,13 +82,59 @@
                    {:name "main"
                     :group/name gname}}}))
 
+(defn- show-account-with-coonected-entries [ds gname aname]
+  (adi/select ds {:account
+                  {:name aname
+                   :book
+                   {:name "main"
+                    :journals
+                    {:name "generalledger"
+                     :entries {:content {:account/name aname}}}}}}))
 
-(defn update-account [ds id account]
+(defn does-account-have-connected-entries? [ds gname aname]
+  (-> (show-account-with-coonected-entries ds gname aname)
+      empty?
+      not))
 
-  ;; can only update if no other entries point to it
-  ;; can only update :name or :type (:counterWeight is automatically changed)
 
-  )
+(defn assert-only-name [input-map]
+  (empty? (remove #(= :name %) (keys input-map))))
+
+(defn assert-name-ortype [input-map]
+  (empty? (remove #(or (= :name %)
+                       (= :type %))
+                  (keys input-map))))
+
+(defn update-account-nominal [ds aname gname account]
+  (adi/update! ds
+               {:account
+                {:name aname
+                 :book
+                 {:name "main"
+                  :group/name gname}}}
+
+               {:account account}))
+
+(defn update-account [ds gname aname account]
+  {:pre [(map? account)
+         (-> account :name nil? not)]}
+
+  ;; if no other entries point to it
+  ;;   can only update :name or :type
+  ;;   can only update :name or :type (:counterWeight is automatically changed)
+
+  ;; if other entries point to it
+  ;;   can only update :name
+
+  (if (does-account-have-connected-entries? ds gname aname)
+
+    (if (assert-only-name account)
+      (update-account-nominal ds aname gname account)
+      (throw+ {:type :connected-account-onlyname-violation}))
+
+    (if (assert-name-ortype account)
+      (update-account-nominal ds aname gname account)
+      (throw+ {:type :disconnected-account-nametype-violation}))))
 
 
 (comment
@@ -100,6 +147,4 @@
                   [?e22978 :book/name "main"]
                   [?e22978 :book/group ?e22979]
                   [?e22979 :group/name "webkell"]]
-             [])
-
-)
+             []))
