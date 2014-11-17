@@ -177,7 +177,7 @@
                   (and r1
                        (not r2)))))
 
-(defspec test-update-account-with-connected-entry
+(defspec test-update-account-with-connected-entry-GOOD
   10
   (prop/for-all [_ gen/int]
 
@@ -189,19 +189,36 @@
                       aname "electricity"
                       newa-good {:name "electricity2"}
 
-                      newa-bad {:name "electricity"
-                                :type :liability
-                                :counterWeight :credit}
+
 
                       rgood (try+ (acc/update-account ds group-name aname newa-good)
-                                  (catch AssertionError e &throw-context))
-
-                      #_rbad #_(try+ (acc/update-account ds group-name aname newa-bad)
                                   (catch AssertionError e &throw-context))]
 
                   (and (-> rgood vector?)
                        (=  '(:account :db)
                            (-> rgood first keys sort))))))
+
+
+(defspec test-update-account-with-connected-entry-BAD
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+                      _ (hlp/add-test-entry ds group-name)
+
+                      aname "electricity"
+
+                      newa-bad {:name "electricity"
+                                :type :liability
+                                :counterWeight :credit}
+
+                      rbad (try+ (acc/update-account ds group-name aname newa-bad)
+                                 (catch Object e e))]
+
+                  (and (-> rbad nil? not)
+                       (= rbad {:type :connected-account-onlyname-violation})))))
 
 #_(defspec test-update-account-without-connected-entry
   10
@@ -230,7 +247,7 @@
   (bkell/log-debug!)
   (bkell/log-info!)
   (midje.repl/autotest)
-  (midje.repl/load-facts 'bkell.domain.account-test)
+  (midje.repl/load-facts 'bkell.domain.account-test :current)
 
   (def group-name "webkell")
   (def ds (hlp/setup-db!))
