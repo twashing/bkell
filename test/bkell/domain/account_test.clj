@@ -189,15 +189,12 @@
                       aname "electricity"
                       newa-good {:name "electricity2"}
 
-
-
                       rgood (try+ (acc/update-account ds group-name aname newa-good)
                                   (catch AssertionError e &throw-context))]
 
                   (and (-> rgood vector?)
                        (=  '(:account :db)
                            (-> rgood first keys sort))))))
-
 
 (defspec test-update-account-with-connected-entry-BAD
   10
@@ -220,7 +217,7 @@
                   (and (-> rbad nil? not)
                        (= rbad {:type :connected-account-onlyname-violation})))))
 
-#_(defspec test-update-account-without-connected-entry
+(defspec test-update-account-without-connected-entry-GOOD
   10
   (prop/for-all [_ gen/int]
 
@@ -229,19 +226,36 @@
                       _ (hlp/setup-accounts ds group-name)
                       _ (hlp/add-test-entry ds group-name)
 
-                      aname "electricity"
-                      new-account {:name "trade-creditor2"
-                                   :type :expense
-                                   :counterWeight :debit}
+                      aname "cash"
+                      newa-good {:name "cash2"
+                                 :type :liability}
 
-                      r1 (acc/does-account-have-connected-entries? ds group-name aname)
-                      r2 (acc/does-account-have-connected-entries? ds group-name "cash")
-                      ;;_ (acc/update-account ds group-name aid new-account)
-                      ]
+                      rgood (try+ (acc/update-account ds group-name aname newa-good)
+                                  (catch AssertionError e &throw-context))]
 
-                  (and r1
-                       (not r2)))))
+                  (and (-> rgood vector?)
+                       (=  '(:account :db)
+                           (-> rgood first keys sort))))))
 
+(defspec test-update-account-without-connected-entry-BAD
+  10
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+                      _ (hlp/add-test-entry ds group-name)
+
+                      aname "cash"
+                      newa-bad {:name "cash2"
+                                :type :liability
+                                :counterWeight :credit}
+
+                      rbad (try+ (acc/update-account ds group-name aname newa-bad)
+                                 (catch Object e e))]
+
+                  (and (-> rbad nil? not)
+                       (= rbad {:type :disconnected-account-nametype-violation})))))
 
 (comment
   (bkell/log-debug!)

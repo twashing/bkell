@@ -119,12 +119,12 @@
   {:pre [(map? account)
          (-> account :name nil? not)]}
 
+  ;; if other entries point to it
+  ;;   can only update :name
+
   ;; if no other entries point to it
   ;;   can only update :name or :type
   ;;   can only update :name or :type (:counterWeight is automatically changed)
-
-  ;; if other entries point to it
-  ;;   can only update :name
 
   (if (does-account-have-connected-entries? ds gname aname)
 
