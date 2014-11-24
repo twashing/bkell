@@ -82,7 +82,7 @@
                    {:name "main"
                     :group/name gname}}}))
 
-(defn- show-account-with-coonected-entries [ds gname aname]
+(defn- show-account-with-connected-entries [ds gname aname]
   (adi/select ds {:account
                   {:name aname
                    :book
@@ -92,7 +92,7 @@
                      :entries {:content {:account/name aname}}}}}}))
 
 (defn does-account-have-connected-entries? [ds gname aname]
-  (-> (show-account-with-coonected-entries ds gname aname)
+  (-> (show-account-with-connected-entries ds gname aname)
       empty?
       not))
 

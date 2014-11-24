@@ -137,6 +137,30 @@
                                            {:type :debit, :amount 1600.0}
                                            {:type :debit, :amount 1000.0}}))))))
 
+(defspec test-update-entry-balanced
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+
+                      entry {:date (java.util.Date.)
+                             :content [{:type :credit
+                                        :amount 2600
+                                        :account "trade-creditor"}
+
+                                       {:type :debit
+                                        :amount 1000
+                                        :account "electricity"}
+
+                                       {:type :debit
+                                        :amount 1600
+                                        :account "widgets"}]}]
+
+                  (= '(:db :journal)
+                     (sort (keys (first (ent/add-entry ds group-name entry))))))))
+
 
 (comment
   (bkell/log-debug!)
@@ -213,6 +237,23 @@
   (ent/entry-balanced? ds group-name entry-transformed)
 
   (ent/add-entry ds group-name entry)
+  (def r3 [{:journal {:entries
+                      #{{:+ {:db {:id 17592186045473}},
+                         :content #{{:+ {:db {:id 17592186045475}},
+                                     :amount 1000.0,
+                                     :type :debit,
+                                     :account 17592186045469}
+                                    {:+ {:db {:id 17592186045474}},
+                                     :amount 1600.0,
+                                     :type :debit,
+                                     :account 17592186045471}
+                                    {:+ {:db {:id 17592186045476}},
+                                     :amount 2600.0,
+                                     :type :credit,
+                                     :account 17592186045470}},
+                         :date #inst "2014-11-24T19:28:36.386-00:00"}}},
+            :db {:id 17592186045465}}])
+
 
   (ent/list-entries ds group-name)
 

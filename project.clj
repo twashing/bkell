@@ -11,7 +11,8 @@
                  [im.chit/adi "0.3.1-SNAPSHOT"]
                  [environ "1.0.0"]
                  [missing-utils "0.1.5"]
-                 [slingshot "0.12.1"]]
+                 [slingshot "0.12.1"]
+                 [zip-visit "1.0.2"]]
 
   :repl-options {:init-ns bkell.bkell}
 
