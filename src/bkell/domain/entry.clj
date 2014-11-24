@@ -51,35 +51,11 @@
                                 (dissoc ech :account-counterweight))
                               (:content entry))))
 
-(defn add-entry [ds group-name entry]
-  {:pre [(not (nil? group-name))
-         (not (nil? entry))
-         (not (nil? (:date entry)))]}
-
-  (let [entry-transformed (transform-entry-accounts ds group-name entry)
-        check-accounts-exist? (corresponding-accounts-exist? entry-transformed)
-        check-entry-balanced? (entry-balanced? ds group-name entry-transformed)
-        entry-final (strip-account-counterweight entry-transformed)]
-
-    (if check-accounts-exist?
-      (if check-entry-balanced?
-        (adi/update! ds
-               {:journal
-                {:name "generalledger"
-                 :book
-                 {:name "main"
-                  :group/name group-name}}}
-               {:journal/entries entry-final})
-        (throw+ {:type :unbalanced-entry}))
-      (throw+ {:type :non-existant-accounts}))))
-
-(require '[alex-and-georges.debug-repl :as debug])
-
 (defn transform-entry-ids
   "Moves an entry's adi id, from A. to B.
 
   A.
-  {:date #inst "2014-11-24T19:28:36.386-00:00",
+  {:date #inst \"2014-11-24T19:28:36.386-00:00\",
    :content
    #{{:amount 2600.0,
       :type :credit,
@@ -110,8 +86,7 @@
       :type :debit,
       :account 17592186045469,
       :db/id 17592186045475}},
-   :db/id 17592186045473}
-  "
+   :db/id 17592186045473}"
   [entry]
   {:pre  [ (map? entry)]}
 
@@ -133,25 +108,38 @@
                               :+)))))
         (recur (zip/next loc))))))
 
+(defn transform-entries [entries]
 
-[{:db {:id 17592186045465},
-  :journal
-  {:entries
-   #{{:date #inst "2014-11-24T19:28:36.386-00:00",
-      :content
-      #{{:amount 2600.0,
-         :type :credit,
-         :account 17592186045470,
-         :+ {:db {:id 17592186045476}}}
-        {:amount 1000.0,
-         :type :debit,
-         :account 17592186045469,
-         :+ {:db {:id 17592186045475}}}
-        {:amount 1600.0,
-         :type :debit,
-         :account 17592186045471,
-         :+ {:db {:id 17592186045474}}}},
-      :+ {:db {:id 17592186045473}}}}}}]
+  (map (fn [i1]
+         (update-in i1
+                    [:journal :entries]
+                    (fn [i2]
+                      (map #(transform-entry-ids %)
+                           i2))))
+       entries))
+
+(defn add-entry [ds group-name entry]
+  {:pre [(not (nil? group-name))
+         (not (nil? entry))
+         (not (nil? (:date entry)))]}
+
+  (let [entry-transformed (transform-entry-accounts ds group-name entry)
+        check-accounts-exist? (corresponding-accounts-exist? entry-transformed)
+        check-entry-balanced? (entry-balanced? ds group-name entry-transformed)
+        entry-final (strip-account-counterweight entry-transformed)]
+
+    (if check-accounts-exist?
+      (if check-entry-balanced?
+        (transform-entries (adi/update! ds
+                                         {:journal
+                                          {:name "generalledger"
+                                           :book
+                                           {:name "main"
+                                            :group/name group-name}}}
+                                         {:journal/entries entry-final}))
+        (throw+ {:type :unbalanced-entry}))
+      (throw+ {:type :non-existant-accounts}))))
+
 
 
 ;; TODO - try #{'(.before #inst "0000-0000") '(.after #"00000-000001")}
