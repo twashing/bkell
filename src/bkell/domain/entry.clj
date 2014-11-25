@@ -108,7 +108,26 @@
                               :+)))))
         (recur (zip/next loc))))))
 
-(defn transform-entries [entries]
+(defn transform-entries
+  "This function expects a structure like:
+
+   [{:journal {:entries
+               #{{:+ {:db {:id 17592186045473}},
+                  :content #{{:+ {:db {:id 17592186045475}},
+                              :amount 1000.0,
+                              :type :debit,
+                              :account 17592186045469}
+                             {:+ {:db {:id 17592186045474}},
+                              :amount 1600.0,
+                              :type :debit,
+                              :account 17592186045471}
+                             {:+ {:db {:id 17592186045476}},
+                              :amount 2600.0,
+                              :type :credit,
+                              :account 17592186045470}},
+                  :date #inst\"2014-11-24T19:28:36.386-00:00\"}}},
+     :db {:id 17592186045465}}]"
+  [entries]
 
   (map (fn [i1]
          (update-in i1

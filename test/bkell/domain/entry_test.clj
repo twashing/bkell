@@ -137,15 +137,15 @@
                                            {:type :debit, :amount 1600.0}
                                            {:type :debit, :amount 1000.0}}))))))
 
-(defspec test-update-entry-balanced
-  5
+(defspec test-add-entry-multiple
+  10
   (prop/for-all [_ gen/int]
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
                       _ (hlp/setup-accounts ds group-name)
 
-                      entry {:date (java.util.Date.)
+                      e1 {:date (java.util.Date.)
                              :content [{:type :credit
                                         :amount 2600
                                         :account "trade-creditor"}
@@ -156,10 +156,75 @@
 
                                        {:type :debit
                                         :amount 1600
-                                        :account "widgets"}]}]
+                                        :account "widgets"}]}
 
-                  (= '(:db :journal)
-                     (sort (keys (first (ent/add-entry ds group-name entry))))))))
+                      e2 {:date (java.util.Date.)
+                             :content [{:type :credit
+                                        :amount 2300
+                                        :account "trade-creditor"}
+
+                                       {:type :debit
+                                        :amount 1000
+                                        :account "electricity"}
+
+                                       {:type :debit
+                                        :amount 1300
+                                        :account "widgets"}]}
+
+                      _ (ent/add-entry ds group-name e1)
+                      _ (ent/add-entry ds group-name e2)
+
+                      result (ent/list-entries ds group-name)]
+
+                  (= 2 (count result)))))
+
+(defspec test-update-entry-balanced
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      _ (hlp/setup-accounts ds group-name)
+
+                      e1 {:date (java.util.Date.)
+                          :content [{:type :credit
+                                     :amount 2600
+                                     :account "trade-creditor"}
+
+                                    {:type :debit
+                                     :amount 1000
+                                     :account "electricity"}
+
+                                    {:type :debit
+                                     :amount 1600
+                                     :account "widgets"}]}
+
+                      e2 {:date (java.util.Date.)
+                          :content [{:type :credit
+                                     :amount 2300
+                                     :account "trade-creditor"}
+
+                                    {:type :debit
+                                     :amount 1000
+                                     :account "electricity"}
+
+                                    {:type :debit
+                                     :amount 1300
+                                     :account "widgets"}]}
+
+                      r1 (ent/add-entry ds group-name e1)
+                      r2 (ent/add-entry ds group-name e2)
+                      _ #spy/d (ent/list-entries ds group-name)]
+
+                  (= 1 1)
+                  ;; pull out the entry
+                  ;; modify the date
+                  ;; update
+
+                  #_(= '(:db :journal)
+                       (sort (keys (first ))))
+
+                  )))
 
 
 (comment
