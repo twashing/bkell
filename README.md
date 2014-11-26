@@ -137,6 +137,27 @@ improt 2   |        |  Y  |     |  Y
 - make better generators for functions in domain/{account.clj,entry.clj}
 - ensure that :account-counterweight is in the input structure of entry-balanced?
 - add IDs to account and entry; we need to ensure that there's a way to differentiate, say, entries with the same data
+- reverse an entry 
+- remaining updates
+  - group
+    - name
+    - owner
+    - defaultCurrency
+    + add a user
+    + add a set of books
+  - user
+    - username
+    - password
+    - firstname
+    - lastname
+    - email
+    - country
+    [x] not defaultGroup
+- remaining deletes
+  - account 
+  - entry 
+  - group 
+  - user
 
 - (entry) test unbalanced
 - (entry) test non-existant accounts
