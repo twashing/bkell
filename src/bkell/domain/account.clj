@@ -73,8 +73,11 @@
        (apply adi/select select-args))))
 
 
-(defn find-account-by-id [ds gname aid]
-  (:account (hlp/find-by-id ds aid)))
+(defn find-account-by-id
+  ([ds gname aid]
+     (find-account-by-id ds gname aid [:first]))
+  ([ds gname aid opts]
+     (:account (hlp/find-by-id ds aid opts))))
 
 (defn list-accounts [ds gname]
   (adi/select ds {:account

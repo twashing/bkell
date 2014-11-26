@@ -39,7 +39,10 @@
 (defn transform-entry-accounts [ds gname entry]
   (assoc entry :content (mapv (fn [ech]
 
-                                (let [raccount (acc/find-account-by-name ds gname (:account ech) [:ids])]
+                                (let [raccount (if (number? (:account ech))
+                                                 #_(acc/find-account-by-id ds gname (:account ech) [:ids])
+                                                 (hlp/find-by-id ds (:account ech) [:ids])
+                                                 (acc/find-account-by-name ds gname (:account ech) [:ids]))]
                                   (assoc ech
                                     :account (-> raccount first :db :id)
                                     :account-counterweight (-> raccount first :account :counterWeight))))
@@ -183,13 +186,23 @@
          (not (nil? entry))
          (not (nil? (:date entry)))]}
 
-  (let [entry-transformed (transform-entry-accounts ds group-name entry)
+  (let [
+        ;; entry-transformed #spy/d (transform-entry-accounts ds group-name #spy/d entry)
+        entry-transformed (transform-entry-accounts ds group-name entry)
         check-accounts-exist? (corresponding-accounts-exist? entry-transformed)
         check-entry-balanced? (entry-balanced? ds group-name entry-transformed)
         entry-final (strip-account-counterweight entry-transformed)]
 
     (if check-accounts-exist?
       (if check-entry-balanced?
-        (adi/update! ds eid entry-final)
+        #_(adi/update! ds eid #spy/d entry-final)
+        (adi/update! ds
+                     {:journal
+                      {:name "generalledger"
+                       :entries {:+/db/id eid}
+                       :book
+                       {:name "main"
+                        :group/name group-name}}}
+                     {:journal/entries entry-final})
         (throw+ {:type :unbalanced-entry}))
       (throw+ {:type :non-existant-accounts}))))

@@ -184,7 +184,7 @@
 
                 (let [group-name "webkell"
                       ds (hlp/setup-db!)
-                      _ (hlp/setup-accounts ds group-name)
+                      one (hlp/setup-accounts ds group-name)
 
                       e1 {:date (java.util.Date.)
                           :content [{:type :credit
@@ -213,19 +213,15 @@
                                      :account "widgets"}]}
 
                       r1 (ent/add-entry ds group-name e1)
-                      r2 (ent/add-entry ds group-name e2)
-                      _ #spy/d (ent/list-entries ds group-name)]
+                      r2 (ent/add-entry ds group-name e2)]
 
-                  (= 1 1)
-                  ;; pull out the entry
-                  ;; modify the date
-                  ;; update
+                  (let [rentry (-> r2 first :journal :entries first)
+                        rentry2 (assoc rentry :date (java.util.Date.))
 
-                  #_(= '(:db :journal)
-                       (sort (keys (first ))))
+                        uentry (ent/update-entry ds group-name (:db/id rentry2) rentry2)]
 
-                  )))
-
+                    (= '(:db :journal)
+                       (sort (keys (first uentry))))))))
 
 (comment
   (bkell/log-debug!)

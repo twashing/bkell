@@ -136,6 +136,7 @@ improt 2   |        |  Y  |     |  Y
 - CRUD on book(s) journal(s)
 - make better generators for functions in domain/{account.clj,entry.clj}
 - ensure that :account-counterweight is in the input structure of entry-balanced?
+- add IDs to account and entry; we need to ensure that there's a way to differentiate, say, entries with the same data
 
 - (entry) test unbalanced
 - (entry) test non-existant accounts
@@ -146,6 +147,8 @@ improt 2   |        |  Y  |     |  Y
 - on add-account, assert that :type has the correct corresponding :counterWeight
 -- currently only operating on the `main` books; open this up to operate on any book
 - ** howto assert that account belongs to group (in: domain.account/find-account-by-id)
+
+- ** There's a schema problem, when trying to update an entry, directly by id 
 
 ## License
 
