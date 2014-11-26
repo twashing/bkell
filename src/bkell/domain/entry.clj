@@ -163,11 +163,29 @@
       (throw+ {:type :non-existant-accounts}))))
 
 
+(defn find-entry-before [ds gname date]
+  (adi/select ds {:journal
+                  {:name "generalledger"
+                   :entries {:date #{(.before date)}}
+                   :book
+                   {:name "main"
+                    :group/name gname}}}))
 
-;; TODO - try #{'(.before #inst "0000-0000") '(.after #"00000-000001")}
-(defn find-entry-before [ds gname date] )
-(defn find-entry-after [ds gname date] )
-(defn find-entry-between [ds gname before after] )
+(defn find-entry-after [ds gname date]
+  (adi/select ds {:journal
+                  {:name "generalledger"
+                   :entries {:date #{(.after date)}}
+                   :book
+                   {:name "main"
+                    :group/name gname}}}))
+
+(defn find-entry-between [ds gname before after]
+  (adi/select ds {:journal
+                   {:name "generalledger"
+                    :date #{'(.before before) '(.after after)}
+                    :book
+                    {:name "main"
+                     :group/name gname}}}))
 
 (defn list-entries [ds gname]
   (let [result (adi/select ds {:journal
@@ -195,7 +213,6 @@
 
     (if check-accounts-exist?
       (if check-entry-balanced?
-        #_(adi/update! ds eid #spy/d entry-final)
         (adi/update! ds
                      {:journal
                       {:name "generalledger"
@@ -206,3 +223,47 @@
                      {:journal/entries entry-final})
         (throw+ {:type :unbalanced-entry}))
       (throw+ {:type :non-existant-accounts}))))
+
+(comment
+  (bkell/log-debug!)
+  (bkell/log-info!)
+
+  (ns bkell.bkell)
+  (require '[bkell.domain.account :as acc]
+           '[bkell.domain.entry :as ent]
+           '[bkell.domain.test-helper :as hlp]
+           '[bkell.domain.test-helper :as thlp])
+
+  (def group-name "webkell")
+  (def ds (thlp/setup-db!))
+  (def one (thlp/setup-accounts ds group-name))
+
+  (def entry {:date #inst "2014-11-01"
+              :content [{:type :credit
+                         :amount 2600
+                         :account "trade-creditor"}
+
+                        {:type :debit
+                         :amount 1000
+                         :account "electricity"}
+
+                        {:type :debit
+                         :amount 1600
+                         :account "widgets"}]})
+
+  (ent/add-entry ds group-name entry)
+
+  (def result ({:journal
+                {:entries
+                 ({:db/id 17592186045473,
+                   :content #{{:db/id 17592186045476, :amount 1600.0, :type :debit, :account 17592186045470}
+                              {:db/id 17592186045474, :amount 1000.0, :type :debit, :account 17592186045469}
+                              {:db/id 17592186045475, :amount 2600.0, :type :credit, :account 17592186045471}},
+                   :date #inst "2014-11-01T00:00:00.000-00:00"})},
+                :db {:id 17592186045454}}))
+
+  (ent/find-entry-after ds group-name #inst "2014-01-01")
+  (ent/find-entry-before ds group-name #inst "2014-12-01")
+  (ent/find-entry-between ds group-name #inst "2014-01-01" #inst "2014-12-01")
+
+  entry)
