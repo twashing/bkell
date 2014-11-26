@@ -101,42 +101,19 @@ improt 2   |        |  Y  |     |  Y
 ## Todo List
 
 - separate import data function (we need insert-in, then we can constrain the data being inserted)
+- runnable scripts ; include code examples for adding account(s) and entries 
 - import default data on start (:test)
   - import users (under :users), if you are the group owner
   - import accounts, journals, and journal entries (under :books), if your user is a member of the group
 - separate export data function
 - change password on user creation
-- add-account helper that assigns :counterWeight, based on the :type
-
-- use Maybe Monad to execute component.spittoon/start
-- datomic wrapper (using adi)
-  - with nominal CRUD operations
-  - with {create,retrieve,update,delete}-in, constraining the data's context
-  - the abouve data structure constraints must be maintained when manipulating entites in the system.
-  - each CRUD operation should be programmed with a corresponding test.check function ; either create, or reuse the correct generators for the task 
-- login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
-- runnable scripts ; include code examples for adding account(s) and entries 
-- don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
-- don't think we need container pointers in schema
-```
-:entry {:content [{:type :ref
-                   :ref {:ns :side}
-                   :cardinality :many
-                   :isComponent true}]
-        :journal [{:type :ref
-                   :ref {:ns :journal}
-                   :doc "The journal belonging to the entry"}]}
-```
-- put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
-  - don't add duplicate accounts (solely within a given group)
-
-- for function constraints, evaluate typed.clojure vs. schema
-- an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
-- replace `no-duplicate-accounts` with a query using the list
-- CRUD on book(s) journal(s)
-- make better generators for functions in domain/{account.clj,entry.clj}
-- ensure that :account-counterweight is in the input structure of entry-balanced?
 - add IDs to account and entry; we need to ensure that there's a way to differentiate, say, entries with the same data
+- on add-account, assert that :type has the correct corresponding :counterWeight
+- (entry) test unbalanced
+- (entry) test non-existant accounts
+- (entry) a bigger entry example
+- (entry) test with "find-corresponding-account-byid"
+- (entry) test that entry gets into the correct group
 - reverse an entry 
 - remaining updates
   - group
@@ -158,18 +135,30 @@ improt 2   |        |  Y  |     |  Y
   - entry 
   - group 
   - user
-
-- (entry) test unbalanced
-- (entry) test non-existant accounts
-- (entry) a bigger entry example
-- (entry) test with "find-corresponding-account-byid"
-- (entry) test that entry gets into the correct group
-
-- on add-account, assert that :type has the correct corresponding :counterWeight
--- currently only operating on the `main` books; open this up to operate on any book
+- CRUD on book(s) journal(s)
+- currently only operating on the `main` books; open this up to operate on any book
 - ** howto assert that account belongs to group (in: domain.account/find-account-by-id)
-
+- login mechanism for the shell; (ref: crash pluggable authentication: http://www.crashub.org/1.2/reference.html#pluggable_auth)
+- don't think we need container pointers in schema
+```
+:entry {:content [{:type :ref
+                   :ref {:ns :side}
+                   :cardinality :many
+                   :isComponent true}]
+        :journal [{:type :ref
+                   :ref {:ns :journal}
+                   :doc "The journal belonging to the entry"}]}
+```
+- ensure that :account-counterweight is in the input structure of entry-balanced?
+- put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
+  - don't add duplicate accounts (solely within a given group)
+- for function constraints, evaluate typed.clojure vs. schema
+- an aggreagate function : sum of all credit accounts must equal sum of all debit accounts
+- replace `no-duplicate-accounts` with a query using the list
+- make better generators for functions in domain/{account.clj,entry.clj}
 - ** There's a schema problem, when trying to update an entry, directly by id 
+- don't see a way to disconnect from a datomic DB (worried about lingering connection issues)
+
 
 ## License
 
