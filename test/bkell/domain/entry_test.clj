@@ -223,6 +223,62 @@
                     (= '(:db :journal)
                        (sort (keys (first uentry))))))))
 
+(defspec test-update-entry-unbalanced
+  5
+  (prop/for-all [_ gen/int]
+
+                (let [group-name "webkell"
+                      ds (hlp/setup-db!)
+                      one (hlp/setup-accounts ds group-name)
+
+                      e1 {:date (java.util.Date.)
+                          :content [{:type :credit
+                                     :amount 2600
+                                     :account "trade-creditor"}
+
+                                    {:type :debit
+                                     :amount 1000
+                                     :account "electricity"}
+
+                                    {:type :debit
+                                     :amount 1600
+                                     :account "widgets"}]}
+
+                      e2 {:date (java.util.Date.)
+                          :content [{:type :credit
+                                     :amount 2300
+                                     :account "trade-creditor"}
+
+                                    {:type :debit
+                                     :amount 1000
+                                     :account "electricity"}
+
+                                    {:type :debit
+                                     :amount 1300
+                                     :account "widgets"}]}
+
+                      r1 (ent/add-entry ds group-name e1)
+                      r2 (ent/add-entry ds group-name e2)]
+
+                  (let [rentry (-> r2 first :journal :entries first)
+                        rentry2 (assoc rentry :content [{:type :credit
+                                                         :amount 2300
+                                                         :account "trade-creditor"}
+
+                                                        {:type :debit
+                                                         :amount 1000
+                                                         :account "electricity"}
+
+                                                        {:type :debit
+                                                         :amount 1000
+                                                         :account "widgets"}])
+
+                        rbad (try+ (ent/update-entry ds group-name (:db/id rentry2) rentry2)
+                                   (catch Object e e))]
+
+                    (and (-> rbad nil? not)
+                         (= rbad {:type :unbalanced-entry}))))))
+
 (comment
   (bkell/log-debug!)
   (bkell/log-info!)
