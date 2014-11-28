@@ -166,26 +166,29 @@
 (defn find-entry-before [ds gname date]
   (adi/select ds {:journal
                   {:name "generalledger"
-                   :entries {:date #{(.before date)}}
+                   :entries {:date #{(list '.before date)}}
                    :book
                    {:name "main"
-                    :group/name gname}}}))
+                    :group/name gname}}}
+              :return {:journal {:entries {:content :checked}}}))
 
 (defn find-entry-after [ds gname date]
   (adi/select ds {:journal
                   {:name "generalledger"
-                   :entries {:date #{(.after date)}}
+                   :entries {:date #{(list '.after date)}}
                    :book
                    {:name "main"
-                    :group/name gname}}}))
+                    :group/name gname}}}
+              :return {:journal {:entries {:content :checked}}}))
 
-(defn find-entry-between [ds gname before after]
+(defn find-entry-between [ds gname after before]
   (adi/select ds {:journal
                    {:name "generalledger"
-                    :date #{'(.before before) '(.after after)}
+                    :entries {:date #{(list '.after after) (list '.before before)}}
                     :book
                     {:name "main"
-                     :group/name gname}}}))
+                     :group/name gname}}}
+              :return {:journal {:entries {:content :checked}}}))
 
 (defn list-entries [ds gname]
   (let [result (adi/select ds {:journal
