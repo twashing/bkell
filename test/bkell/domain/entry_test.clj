@@ -137,6 +137,9 @@
                                            {:type :debit, :amount 1600.0}
                                            {:type :debit, :amount 1000.0}}))))))
 
+(comment
+  (midje.repl/load-facts 'bkell.domain.entry-test))
+
 (defspec test-add-entry-multiple
   10
   (prop/for-all [_ gen/int]
@@ -290,19 +293,6 @@
            '[bkell.domain.entry :as ent]
            '[bkell.domain.test-helper :as hlp])
 
-  (def a1 {:name "trade-creditor"
-           :type :expense
-           :counterWeight :debit})
-
-  (def a2 {:name "electricity"
-           :type :asset
-           :counterWeight :debit})
-
-  (def a3 {:name "widgets"
-           :type :asset
-           :counterWeight :debit})
-
-  (def accounts [a1 a2 a3])
 
   (def entry {:date (java.util.Date.)
               :content [{:type :credit
@@ -317,106 +307,35 @@
                          :amount 1600
                          :account "widgets"}]})
 
-  (def entry2 {:date (java.util.Date.)
-              :content [{:type :credit
-                         :amount 2600
-                         :account "trade-creditor"}
 
-                        {:type :debit
-                         :amount 1000
-                         :account "electricity"}
-
-                        {:type :debit
-                         :amount 1600
-                         :account "Zzz"}]})
-
+  (def gname "webkell")
   (def ds (hlp/setup-db!))
-  (def group-name "webkell")
+  (def accounts (hlp/setup-accounts ds gname))
 
-  (acc/add-accounts ds group-name accounts)
+  (ent/add-entry ds gname entry)
 
-  (def entry-transformed (ent/transform-entry-accounts ds group-name entry))
+  (ent/list-entries ds gname)
 
-  (def r1 {:date #inst "2014-11-10T20:31:33.635-00:00",
-           :content [{:amount 2600, :type :credit, :account 17592186045471}
-                     {:amount 1000, :type :debit, :account 17592186045469}
-                     {:amount 1600, :type :debit, :account 17592186045470}]})
-
-  (ent/transform-entry-accounts ds group-name entry2)
-
-  (def r2 {:date #inst "2014-11-10T20:38:29.774-00:00",
-           :content [{:amount 2600, :type :credit, :account 17592186045471}
-                     {:amount 1000, :type :debit, :account 17592186045469}
-                     {:amount 1600, :type :debit, :account nil}]})
-
-  (ent/corresponding-accounts-exist? r2)
-
-  (ent/entry-balanced? ds group-name entry-transformed)
-
-  (ent/add-entry ds group-name entry)
-  (def r3 [{:journal {:entries
-                      #{{:+ {:db {:id 17592186045473}},
-                         :content #{{:+ {:db {:id 17592186045475}},
-                                     :amount 1000.0,
-                                     :type :debit,
-                                     :account 17592186045469}
-                                    {:+ {:db {:id 17592186045474}},
-                                     :amount 1600.0,
-                                     :type :debit,
-                                     :account 17592186045471}
-                                    {:+ {:db {:id 17592186045476}},
-                                     :amount 2600.0,
-                                     :type :credit,
-                                     :account 17592186045470}},
-                         :date #inst "2014-11-24T19:28:36.386-00:00"}}},
-            :db {:id 17592186045465}}])
-
-
-  (ent/list-entries ds group-name)
-
-  (adi/select ds {:journal/entries '_} :ids)
-
-  #{{:db {:id 17592186045466}, :journal {:name "generalledger"}}}
-  #{{:journal {:name "generalledger"}}}
-
+  (adi/select ds {:journal
+                  {:entries '_}}
+              :ids)
 
   (adi/select ds {:journal
                   {:entries '_
                    :name "generalledger"
                    :book
                    {:name "main"
-                    :group/name group-name}}}
-              ;;:ids
+                    :group/name gname}}}
+              :ids
+              :return {:journal :checked})
+
+  (adi/select ds {:journal
+                  {:entries '_
+                   :name "generalledger"
+                   :book
+                   {:name "main"
+                    :group/name gname}}}
               :return {:journal {:entries {:content :checked}}})
 
-
-  (def z3 #{{:journal {:entries #{{:content #{{:type :credit,
-                                                :amount 2600.0}
-                                               {:type :debit,
-                                                :amount 1600.0}
-                                               {:type :debit,
-                                                :amount 1000.0}},
-                                    :date #inst "2014-11-11T01:07:52.113-00:00"}},
-                        :name "generalledger"}}})
-
-
-  (def z2 #{{:db {:id 17592186045466},
-              :journal {:entries #{{:+ {:db {:id 17592186045473}},
-                                    :content #{{:+ {:db {:id 17592186045474}},
-                                                :type :debit,
-                                                :amount 1000.0}
-                                               {:+ {:db {:id 17592186045475}},
-                                                :type :debit,
-                                                :amount 1600.0}
-                                               {:+ {:db {:id 17592186045476}},
-                                                :type :credit, :amount 2600.0}},
-                                    :date #inst "2014-11-11T01:07:52.113-00:00" },
-                                   :name "generalledger"}}}})
-
-
-  (def z1 #{{:db {:id 17592186045466},
-             :journal {:entries #{{:+ {:db {:id 17592186045473}},
-                                   :date #inst "2014-11-11T01:07:52.113-00:00"}},
-                       :name "generalledger"}}})
 
   )

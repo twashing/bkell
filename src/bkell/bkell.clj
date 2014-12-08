@@ -73,7 +73,7 @@
                    (map extract-doc-fn shell-members)))))
 
 
-(defn ^{:doc "Reloads project configuration and libraries"} reload-project [] (user/reload-project))
+;; (defn ^{:doc "Reloads project configuration and libraries"} reload-project [] (user/reload-project))
 
 (comment
 

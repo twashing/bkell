@@ -192,12 +192,12 @@
 
 (defn list-entries [ds gname]
   (let [result (adi/select ds {:journal
-                               {:entries '_
-                                :name "generalledger"
-                                :book
-                                {:name "main"
-                                 :group/name gname}}}
-                           :return {:journal {:entries {:content :checked}}})]
+                                      {:entries '_
+                                       :name "generalledger"
+                                       :book
+                                       {:name "main"
+                                        :group/name gname}}}
+                                  :return {:journal {:entries {:content :checked}}})]
 
     (-> result first :journal :entries)))
 
