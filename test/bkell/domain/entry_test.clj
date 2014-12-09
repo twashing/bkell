@@ -317,7 +317,7 @@
 
   (adi/select ds {:journal
                   {:entries '_}}
-              :ids :raw)
+              :ids)
 
   (adi/select ds {:journal
                   {:entries '_
@@ -327,15 +327,6 @@
                     :group/name gname}}}
               :ids
               :pull {:journal {:entries {:content :checked}}})
-
-  #{{:db {:id 17592186045464},
-     :journal {:entries #{{:+ {:db {:id 17592186045473}},
-                           :content #{{:+ {:db {:id 17592186045474}},
-                                       :type :debit,
-                                       :amount 1600.0}
-                                      {:+ {:db {:id 17592186045476}},
-                                       :type :debit, :amount 1000.0} {:+ {:db {:id 17592186045475}}, :type :credit, :amount 2600.0}}, :date #inst "2014-12-09T18:24:08.885-00:00"}}, :name "generalledger"}}}
-
 
   (adi/select ds {:journal
                   {:entries '_
@@ -358,19 +349,4 @@
          [?e11095 :book/name "main"]
          [?e11095 :book/group ?e11096]
          [?e11096 :group/name "webkell"]]
-       (d/db (:connection ds)))
-
-  (def z (d/q '[:find ?self
-                :where
-                [?self :journal/name "generalledger"]
-                [?self :journal/book ?e11169]
-                [?_ :entry/journal ?self]
-                [?e11169 :book/name "main"]
-                [?e11169 :book/group ?e11170]
-                [?e11170 :group/name "webkell"]]
-              (d/db (:connection ds))))
-
-  (ns bkell.bkell)
-  (entity->map (ffirst z))
-  (type (ffirst z))
-  )
+       (d/db (:connection ds))))
