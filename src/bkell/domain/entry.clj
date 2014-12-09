@@ -170,7 +170,7 @@
                    :book
                    {:name "main"
                     :group/name gname}}}
-              :return {:journal {:entries {:content :checked}}}))
+              :pull {:journal {:entries {:content :checked}}}))
 
 (defn find-entry-after [ds gname date]
   (adi/select ds {:journal
@@ -179,7 +179,7 @@
                    :book
                    {:name "main"
                     :group/name gname}}}
-              :return {:journal {:entries {:content :checked}}}))
+              :pull {:journal {:entries {:content :checked}}}))
 
 (defn find-entry-between [ds gname after before]
   (adi/select ds {:journal
@@ -188,7 +188,7 @@
                     :book
                     {:name "main"
                      :group/name gname}}}
-              :return {:journal {:entries {:content :checked}}}))
+              :pull {:journal {:entries {:content :checked}}}))
 
 (defn list-entries [ds gname]
   (let [result (adi/select ds {:journal
@@ -197,7 +197,7 @@
                                        :book
                                        {:name "main"
                                         :group/name gname}}}
-                                  :return {:journal {:entries {:content :checked}}})]
+                                  :pull {:journal {:entries {:content :checked}}})]
 
     (-> result first :journal :entries)))
 

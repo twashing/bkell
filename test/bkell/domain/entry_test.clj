@@ -1,22 +1,19 @@
 (ns bkell.domain.entry-test
-  (:require [midje.sweet :refer :all]
-            [midje.repl :repl :all]
-            [clojure.test :refer :all]
+  (:require [adi.core :as adi]
+            [bkell.bkell :as bkell]
+            [bkell.config :as config]
+            [bkell.domain.account :as acc]
+            [bkell.domain.entry :as ent]
             [bkell.domain.test-helper :as hlp]
-            [slingshot.slingshot :refer [try+ throw+]]
-            [slingshot.slingshot :refer [try+ throw+]]
-            [adi.core :as adi]
+            [bkell.spittoon :as sp]
             [clojure.set :as set]
-
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
-
-            [bkell.bkell :as bkell]
-            [bkell.config :as config]
-            [bkell.domain.entry :as ent]
-            [bkell.domain.account :as acc]
-            [bkell.spittoon :as sp]))
+            [clojure.test :refer :all]
+            [midje.repl :repl :all]
+            [midje.sweet :refer :all]
+            [slingshot.slingshot :refer [try+ throw+]]))
 
 
 (def env (:test (config/load-edn "config.edn")))
@@ -291,7 +288,8 @@
   (ns bkell.bkell)
   (require '[bkell.domain.account :as acc]
            '[bkell.domain.entry :as ent]
-           '[bkell.domain.test-helper :as hlp])
+           '[bkell.domain.test-helper :as hlp]
+           '[datomic.api :as d])
 
 
   (def entry {:date (java.util.Date.)
@@ -309,6 +307,7 @@
 
 
   (def gname "webkell")
+
   (def ds (hlp/setup-db!))
   (def accounts (hlp/setup-accounts ds gname))
 
@@ -318,7 +317,7 @@
 
   (adi/select ds {:journal
                   {:entries '_}}
-              :ids)
+              :ids :raw)
 
   (adi/select ds {:journal
                   {:entries '_
@@ -327,7 +326,16 @@
                    {:name "main"
                     :group/name gname}}}
               :ids
-              :return {:journal :checked})
+              :pull {:journal {:entries {:content :checked}}})
+
+  #{{:db {:id 17592186045464},
+     :journal {:entries #{{:+ {:db {:id 17592186045473}},
+                           :content #{{:+ {:db {:id 17592186045474}},
+                                       :type :debit,
+                                       :amount 1600.0}
+                                      {:+ {:db {:id 17592186045476}},
+                                       :type :debit, :amount 1000.0} {:+ {:db {:id 17592186045475}}, :type :credit, :amount 2600.0}}, :date #inst "2014-12-09T18:24:08.885-00:00"}}, :name "generalledger"}}}
+
 
   (adi/select ds {:journal
                   {:entries '_
@@ -335,7 +343,34 @@
                    :book
                    {:name "main"
                     :group/name gname}}}
-              :return {:journal {:entries {:content :checked}}})
+              :pull {:journal {:entries {:content :checked}}} :raw)
+
+  (d/q '[:find ?self
+         :where [?_ :entry/journal ?self]]
+       (d/db (:connection ds)))
 
 
+  (d/q '[:find (pull ?self [*])
+         :where
+         [?self :journal/name "generalledger"]
+         [?self :journal/book ?e11095]
+         [?_ :entry/journal ?self]
+         [?e11095 :book/name "main"]
+         [?e11095 :book/group ?e11096]
+         [?e11096 :group/name "webkell"]]
+       (d/db (:connection ds)))
+
+  (def z (d/q '[:find ?self
+                :where
+                [?self :journal/name "generalledger"]
+                [?self :journal/book ?e11169]
+                [?_ :entry/journal ?self]
+                [?e11169 :book/name "main"]
+                [?e11169 :book/group ?e11170]
+                [?e11170 :group/name "webkell"]]
+              (d/db (:connection ds))))
+
+  (ns bkell.bkell)
+  (entity->map (ffirst z))
+  (type (ffirst z))
   )

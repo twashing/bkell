@@ -26,5 +26,5 @@
   (adi/select ds {:group {:name gname}}))
 
 (defn list-groups [ds]
-  (-> (adi/select ds {:system {:groups '_}} :return {:system {:groups :checked}})
+  (-> (adi/select ds {:system {:groups '_}} :pull {:system {:groups :checked}})
       first :system :groups))

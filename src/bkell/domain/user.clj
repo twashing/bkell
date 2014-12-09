@@ -29,4 +29,4 @@
                {:username '_
                 :groups
                 {:name gname}}}
-              :return {:user :checked}))
+              :pull {:user :checked}))
