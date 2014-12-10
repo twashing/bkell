@@ -100,6 +100,7 @@ improt 2   |        |  Y  |     |  Y
 
 ## Todo List
 
+- in PROD, a function to `create`, `conn`, then `init` a DB
 - separate import data function (we need insert-in, then we can constrain the data being inserted)
 - runnable scripts ; include code examples for adding account(s) and entries 
 - import default data on start (:test)
@@ -150,6 +151,7 @@ improt 2   |        |  Y  |     |  Y
                    :doc "The journal belonging to the entry"}]}
 ```
 - ensure that :account-counterweight is in the input structure of entry-balanced?
+- ** bkell shell's state is always in-memory; should spit out to an external datomic DB
 - put data contraints in as Datomic Transaction Queries (http://docs.datomic.com/database-functions.html)
   - don't add duplicate accounts (solely within a given group)
 - for function constraints, evaluate typed.clojure vs. schema

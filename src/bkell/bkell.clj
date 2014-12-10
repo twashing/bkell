@@ -52,9 +52,14 @@
   (start))
 
 
-(defn import-create! [data group] )
+(defn initialize-db
+  ([] (initialize-db "config.edn"))
+  ([config-file]
 
-(defn import! [data group] )
+     (start {:bkell {}
+             :spittoon {:env (environment-mode (config/load-edn config-file))
+                        :recreate? true}})
+     (stop)))
 
 
 (defn ^{:doc "This help function"}
@@ -121,7 +126,4 @@
                  :book
                  {:name "main"
                   :group/name "webkell"}}}
-               {:journal/entries {:content []}})
-
-
-  )
+               {:journal/entries {:content []}}))
