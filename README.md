@@ -23,7 +23,7 @@ For a more detailed description of double-entry bookkeeping concepts, refer to [
 
 ## Running
 
-Starting a repl should drop you into the shell namespace `bkell.bkell`. You can start and stop the system with the `(start)` `(stop)` commands. Or you can simply get a list of commands by executing `help`.
+Starting a repl should drop you into the shell namespace `bkell.bkell`. You can start and stop the system with the `(start)` `(stop)` commands. Or you can simply get a list of commands by executing `help`. Make sure that _**resource/config.edn**_ exists (`cp resources/config.edn{.sample,}` on first checkout).
 ```
 => (start)
 #sys{:spittoon #sp{...} :bkell #bk{...}}
@@ -36,7 +36,7 @@ Starting a repl should drop you into the shell namespace `bkell.bkell`. You can 
 
 #### Tests
 
-You can run the project's tests with this command
+You can run the project's tests with the below command. Make sure that _**resource/config.edn**_ exists (`cp resources/config.edn{.sample,}` on first checkout).
 ```
 $ lein midje
 ```
