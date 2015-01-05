@@ -6,8 +6,9 @@
             [adi.data.common :refer [iid]]))
 
 (defn load-edn [fname]
-  (let [pbreader (java.io.PushbackReader. (io/reader (io/resource fname)))]
-    (edn/read pbreader)))
+  (try (let [pbreader (java.io.PushbackReader. (io/reader (io/resource fname)))]
+         (edn/read pbreader))
+       (catch Exception e (str "Error loading file[" fname "]"))))
 
 (defn get-config-raw []
   (load-edn "config.edn"))

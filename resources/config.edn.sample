@@ -1,7 +1,9 @@
-{:test {:url-datomic "datomic:mem://bkell-dev"
-        :ephemeral true  ;; dangerous - deletes DB on each boot
-        }
- :dev {:url-datomic "datomic:free://localhost:4334//bkell"
-       :ephemeral false}
- :prod {:url-datomic "datomic:free://localhost:4334//bkell"
-        :ephemeral false}}
+{:test {:db-schema-file "db/schema-adi.edn"
+        :db-default-file "db/default.edn"
+        :db-url "datomic:mem://bkell"}
+ :dev {:db-schema-file "db/schema-adi.edn"
+       :db-default-file "db/default.edn"
+       :db-url "datomic:mem://bkell"}
+ :prod {:db-schema-file "db/schema-adi.edn"
+        :db-default-file "db/default.edn"
+        :db-url "datomic:free://localhost:4334//bkell"}}
