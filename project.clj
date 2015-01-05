@@ -1,4 +1,4 @@
-(defproject bkell "0.1.0"
+(defproject bkell "0.1.2"
   :description "Bkell provides a Shell and API for maintaining balanced records for business transactions"
   :url "https://github.com/twashing/bkell"
   :license {:name "Eclipse Public License"
