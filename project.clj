@@ -8,7 +8,7 @@
                  [com.taoensso/timbre "3.3.1"]
                  [com.datomic/datomic-free "0.9.5052" :exclusions [joda-time]]
                  [im.chit/hara.component "2.1.7"]
-                 [im.chit/adi "0.3.1-SNAPSHOT"]
+                 [im.chit/adi "0.3.1"]
                  [environ "1.0.0"]
                  [missing-utils "0.1.5"]
                  [slingshot "0.12.1"]]
