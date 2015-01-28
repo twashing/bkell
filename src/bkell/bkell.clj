@@ -25,22 +25,20 @@
 (defn log-fatal! [] (timbre/set-level! :fatal))
 (defn log-report! [] (timbre/set-level! :report))
 
-(def environment-mode :dev)
-(def system nil)
+
 
 ;; Bkell State
 (def ^{:doc "Bkell's component system map"} system nil)
-
-
 (def topology {:bkell    [cb/map->Bkell :spittoon]
                :spittoon [cs/map->Spittoon]})
-
-(def config   {:bkell {}
-               :spittoon {:env (environment-mode (config/load-edn "config.edn"))
-                          :recreate? true}})
+(def environment-mode :dev)
+(def file-config (config/load-edn "config.edn"))
+(def component-config   {:bkell {}
+               :spittoon {:env file-config
+                          :recreate? false}})
 
 (defn start
-  ([] (start config))
+  ([] (start component-config))
   ([config]
      (alter-var-root #'system (constantly (hco/start (hco/system topology config))))))
 
@@ -52,14 +50,20 @@
   (start))
 
 
-(defn initialize-db
-  ([] (initialize-db "config.edn"))
-  ([config-file]
+(defn db-create
+  ([] (db-create :dev))
+  ([env] (db-create env (env file-config)))
+  ([env config] (spit/db-create config)))
 
-     (start {:bkell {}
-             :spittoon {:env (environment-mode (config/load-edn config-file))
-                        :recreate? true}})
-     (stop)))
+(defn db-connect
+  ([] (db-connect :dev))
+  ([env] (db-connect env (env file-config)))
+  ([env config] (spit/db-conn config)))
+
+(defn db-initialize
+  ([] (db-initialize :dev))
+  ([env] (db-initialize env (env file-config)))
+  ([env config] (spit/db-init config)))
 
 
 (defn ^{:doc "This help function"}

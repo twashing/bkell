@@ -12,8 +12,6 @@
     (str "#sp" (into {} sp)))
 
   hco/IComponent
-
-  ;; TODO - (maybe) monadically execute
   (-start [sp]
     (timbre/trace "Spittoon.start CALLED > system[" sp "]")
     (if (:recreate? sp)

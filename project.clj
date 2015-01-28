@@ -6,7 +6,8 @@
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha1"]
                  [com.taoensso/timbre "3.3.1"]
-                 [com.datomic/datomic-free "0.9.5052" :exclusions [joda-time]]
+                 ;;[com.datomic/datomic-free "0.9.5052" :exclusions [joda-time]]
+                 [com.datomic/datomic-pro "0.9.5130" :exclusions [joda-time]]
                  [im.chit/hara.component "2.1.7"]
                  [im.chit/adi "0.3.1"]
                  [environ "1.0.0"]
@@ -16,8 +17,13 @@
   :repl-options {:init-ns bkell.bkell}
 
   :profiles {:dev {:source-paths ["dev"]
+
+                   :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
+                                                    :creds :gpg}}
                    :dependencies [[org.clojure/test.check "0.6.1"]
                                   [midje "1.6.3"]
                                   [alembic "0.3.2"]
                                   [spyscope "0.1.5"]]
-                   :plugins [[lein-midje "3.1.3"]]}})
+                   :plugins [[lein-midje "3.1.3"]]}}
+
+  :jvm-opts ^:replace ["-Xmx512m" "-server"])
