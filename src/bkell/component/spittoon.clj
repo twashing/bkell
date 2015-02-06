@@ -14,11 +14,13 @@
   hco/IComponent
   (-start [sp]
     (timbre/trace "Spittoon.start CALLED > system[" sp "]")
-    (if (:recreate? sp)
-      (let [db (sp/db-create (:env sp))
-            _ (sp/db-init (:env sp))]
-        (assoc sp :db db))
-      (assoc sp :db (sp/db-conn (:env sp)))))
+    (let [envr (:env sp)]
+    
+      (if (:recreate? sp)
+        (let [db (sp/db-create envr)
+              _ (sp/db-init envr)]
+          (assoc sp :db db))
+        (assoc sp :db (sp/db-conn envr)))))
 
   (-stop [sp]
     (timbre/trace "Spittoon.stop CALLED > system[" sp "]")

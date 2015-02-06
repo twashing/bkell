@@ -33,9 +33,9 @@
                :spittoon [cs/map->Spittoon]})
 (def environment-mode :dev)
 (def file-config (config/load-edn "config.edn"))
-(def component-config   {:bkell {}
-                         :spittoon {:env file-config
-                                    :recreate? false}})
+(def component-config {:bkell {}
+                       :spittoon {:env (environment-mode file-config)
+                                  :recreate? false}})
 
 (defn start
   ([] (start component-config))

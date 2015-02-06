@@ -1,5 +1,6 @@
 (ns bkell.bkell-test
   (:require [bkell.bkell :as bkell]
+            [bkell.config :as config]
             [clojure.test :refer :all]
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.generators :as gen]
@@ -11,14 +12,18 @@
   10
   (prop/for-all [_ gen/int]
 
-                (bkell/start)
+                (bkell/start {:bkell {}
+                              :spittoon {:env (:test (config/load-edn "config.edn"))
+                                         :recreate? true}})
                 (= '(:bkell :spittoon) (keys bkell/system))))
 
-#_(defspec stopped-system-is-nil
+(defspec stopped-system-is-nil
   10
   (prop/for-all [_ gen/int]
 
-                (let [_ (bkell/start)
+                (let [_ (bkell/start {:bkell {}
+                                      :spittoon {:env (:test (config/load-edn "config.edn"))
+                                                 :recreate? true}})
                       _ (bkell/stop)]
                   (= nil (-> bkell/system :spittoon :db)))))
 
