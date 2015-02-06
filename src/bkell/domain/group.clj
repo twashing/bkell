@@ -23,7 +23,10 @@
                  {:system {:groups generated-group}})))
 
 (defn find-group-by-name [ds gname]
-  (adi/select ds {:group {:name gname}}))
+  (adi/select ds
+              {:group {:name gname}}
+              :pull {:group {:books {:accounts :checked
+                                     :journals {:entries {:content :checked}}}}}))
 
 (defn list-groups [ds]
   (-> (adi/select ds {:system {:groups '_}} :pull {:system {:groups :checked}})

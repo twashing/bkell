@@ -6,8 +6,8 @@
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha1"]
                  [com.taoensso/timbre "3.3.1"]
-                 ;;[com.datomic/datomic-free "0.9.5052" :exclusions [joda-time]]
-                 [com.datomic/datomic-pro "0.9.5130" :exclusions [joda-time]]
+                 [com.datomic/datomic-free "0.9.5052" :exclusions [joda-time]]
+                 ;; [com.datomic/datomic-pro "0.9.5130" :exclusions [joda-time]]
                  [im.chit/hara.component "2.1.7"]
                  [im.chit/adi "0.3.1"]
                  [environ "1.0.0"]
