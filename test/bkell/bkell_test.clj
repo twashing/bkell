@@ -14,7 +14,7 @@
                 (bkell/start)
                 (= '(:bkell :spittoon) (keys bkell/system))))
 
-(defspec stopped-system-is-nil
+#_(defspec stopped-system-is-nil
   10
   (prop/for-all [_ gen/int]
 

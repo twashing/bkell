@@ -34,8 +34,8 @@
 (def environment-mode :dev)
 (def file-config (config/load-edn "config.edn"))
 (def component-config   {:bkell {}
-               :spittoon {:env file-config
-                          :recreate? false}})
+                         :spittoon {:env file-config
+                                    :recreate? false}})
 
 (defn start
   ([] (start component-config))
